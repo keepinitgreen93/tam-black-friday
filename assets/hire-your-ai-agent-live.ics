@@ -1,0 +1,33 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Truly Authentic Marketing//Hire Your AI Agent in 3 Days Live//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:hire-your-ai-agent-live-20261208@trulyauthenticmarketing.com
+DTSTAMP:20261117T000000Z
+DTSTART:20261208T170000Z
+DTEND:20261208T183000Z
+SUMMARY:Hire Your AI Agent in 3 Days\, Live. Day 1: Build your Company Brain and install your AI agent
+DESCRIPTION:Live on Zoom\, 12:00 to 1:30 PM Eastern. Your Zoom link is in your confirmation email. Bring your laptop and lunch.
+LOCATION:Zoom
+END:VEVENT
+BEGIN:VEVENT
+UID:hire-your-ai-agent-live-20261209@trulyauthenticmarketing.com
+DTSTAMP:20261117T000000Z
+DTSTART:20261209T170000Z
+DTEND:20261209T183000Z
+SUMMARY:Hire Your AI Agent in 3 Days\, Live. Day 2: Hire your AI employee in Product Champ
+DESCRIPTION:Live on Zoom\, 12:00 to 1:30 PM Eastern. Your Zoom link is in your confirmation email. Bring your laptop and lunch.
+LOCATION:Zoom
+END:VEVENT
+BEGIN:VEVENT
+UID:hire-your-ai-agent-live-20261210@trulyauthenticmarketing.com
+DTSTAMP:20261117T000000Z
+DTSTART:20261210T170000Z
+DTEND:20261210T183000Z
+SUMMARY:Hire Your AI Agent in 3 Days\, Live. Day 3: Make your quiz match your offer
+DESCRIPTION:Live on Zoom\, 12:00 to 1:30 PM Eastern. Your Zoom link is in your confirmation email. Bring your laptop and lunch.
+LOCATION:Zoom
+END:VEVENT
+END:VCALENDAR
