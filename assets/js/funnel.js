@@ -5,6 +5,18 @@
 
   var lastFocus = null;
 
+  // Reveal on scroll. Content stays visible without JS, without IntersectionObserver, or with reduced motion.
+  var rv = document.querySelectorAll(".rv");
+  if (rv.length && "IntersectionObserver" in window) {
+    document.documentElement.classList.add("js");
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    rv.forEach(function (el) { io.observe(el); });
+  }
+
   function focusables(root) {
     return Array.prototype.slice.call(
       root.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea, select, [tabindex]:not([tabindex="-1"])')

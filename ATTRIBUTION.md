@@ -1,16 +1,18 @@
-# Image sources
-
-Stock photos are from Pexels under the Pexels License (free to use, no attribution required). Recorded here for the file.
+# Image and font sources
 
 | File | Source |
 |---|---|
-| `assets/img/hero-lunch-laptop.webp` | https://www.pexels.com/photo/a-man-eating-a-healthy-takeaway-lunch-at-his-workspace-6613775 |
-| `assets/img/lunch-notebook.webp` | https://www.pexels.com/photo/young-businesswoman-working-remotely-in-cafe-during-lunch-time-3874618 |
-| `assets/img/owner-week.webp` | https://www.pexels.com/photo/stressed-professional-woman-9063397 (cottonbro studio) |
-| `assets/img/teammates-laptop.webp` | https://www.pexels.com/photo/cheerful-colleagues-working-on-project-together-in-office-3860841 (Andrea Piacquadio) |
-| `assets/img/accelerator-planning.webp` | https://www.pexels.com/photo/coworkers-with-laptop-and-netbook-working-on-project-together-4148895 (Gustavo Fring) |
-| `assets/img/foundation-mapping.webp` | https://www.pexels.com/photo/coworkers-working-together-at-the-office-6592405 (Mikhail Nilov) |
-| `assets/img/chris-iglesia.webp` | TAM Company Brain, `brain/assets/people/chris-iglesia/` |
-| `assets/img/tam-logo-white.png`, `tam-logo-indigo.png`, `favicon.svg` | TAM design system package (`tam-design-system/project/assets/`), trimmed and resized only |
+| `assets/img/chris-lunch-zoom-host-*.webp` | AI illustration of Chris Iglesia. FAL `openai/gpt-image-2.6/sunburst/edit`, quality high, 1536x1024 |
+| `assets/img/chris-hands-off-work-*.webp` | Same model and settings |
+| `assets/img/chris-frees-busy-owner-*.webp` | Same model and settings. The business owner is a fictional person |
+| `assets/img/chris-zoom-room-owners-*.webp` | Same model and settings. The people on the screen are fictional |
+| `assets/img/chris-maps-company-brain-*.webp` | Same model and settings |
+| `assets/img/chris-coaches-owner-teammate-*.webp` | Same model and settings. The owner and teammate are fictional people |
+| `assets/img/chris-iglesia.webp` | Real photo. TAM Company Brain, `brain/assets/people/chris-iglesia/` |
+| `assets/img/tam-logo-white.png`, `tam-logo-indigo.png`, `favicon.svg` | TAM design system package, trimmed and resized only |
 
-Fonts: Manrope and Open Sans (SIL Open Font License), self hosted from Google Fonts.
+Identity references for the illustrations were two approved brand photos of Chris from the TAM Company Brain (`chris-iglesia-casual-outdoor-headshot.jpg`, `chris-iglesia-blazer-front-presentation-portrait.jpg`). No family photos and no other real person's likeness were used. The images contain no text. Every word on the page is HTML.
+
+Each page footer says the scene images are AI illustrations.
+
+Fonts: Barlow Condensed, Manrope and Open Sans (SIL Open Font License), self hosted from Google Fonts.

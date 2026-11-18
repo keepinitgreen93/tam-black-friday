@@ -33,11 +33,13 @@ Replace these when the funnel moves into Product Champ:
 5. Remove the `Preview` notes, the `noindex` meta tags, `robots.txt` and the `X-Robots-Tag` header in `_headers`.
 6. If Product Champ embeds need scripts or iframes, update the Content Security Policy meta tag on each page.
 
-## Design system
+## Design system (v2)
 
-TAM design system tokens: indigo family (`#6366F1`, `#4F46E5`, `#4338CA`), midnight `#0F172A`, coral `#F97066` for the single button style, Manrope for headings and Open Sans for body. Fonts are self hosted.
+TAM tokens: indigo family (`#6366F1`, `#4F46E5`, `#4338CA`), midnight `#0B1020`, coral `#FF7A66` for the single button style and badges. Display headings use Barlow Condensed 800 italic, UI text uses Manrope, body uses Open Sans. All fonts are self hosted.
 
-Band pattern: dark gradient bands for story, white bands for reading, solid indigo bands with white containers for the offer.
+Flow and pacing are modelled on a long form Black Friday sales letter: centered hero with the button above the fold, dashed ticket strip for the three days, dark gradient bands for story, white cards with overlapping pill badges for reading, a solid indigo band with numbered stack bars for the offer, a marquee ribbon, then fixes, math, terms, questions and a short closing letter with a P.S.
+
+Scene images of Chris (`assets/img/chris-*.webp`) are AI illustrations made from approved brand photos. Exact words stay in HTML, never in the images. Sources are in `ATTRIBUTION.md`.
 
 ## Local preview
 
