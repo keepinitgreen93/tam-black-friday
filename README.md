@@ -22,6 +22,10 @@ This build is a review preview. Nothing is wired:
 - "Complete My Order" links to `/growth-accelerator`. Upsell yes and no both continue to `/foundation`. The application continues to `/thank-you`.
 - Every page carries `noindex, nofollow`.
 
+## The $97 order button destination (one place)
+
+`assets/js/config.js` holds `window.TAM_FUNNEL.CHECKOUT_URL`. Empty (the default) keeps the preview popup. Set it to the Product Champ checkout link and all 11 order buttons on the sales page go there.
+
 ## Going live in Product Champ
 
 Replace these when the funnel moves into Product Champ:

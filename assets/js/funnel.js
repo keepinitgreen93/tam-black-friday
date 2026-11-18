@@ -40,6 +40,16 @@
     if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
   }
 
+  // $97 order buttons: one destination, set in assets/js/config.js (window.TAM_FUNNEL.CHECKOUT_URL).
+  // Empty value keeps the preview popup. A URL sends every order button there instead.
+  var checkoutUrl = (window.TAM_FUNNEL && window.TAM_FUNNEL.CHECKOUT_URL) || "";
+  if (checkoutUrl) {
+    document.querySelectorAll('[data-open="order"]').forEach(function (a) {
+      a.setAttribute("href", checkoutUrl);
+      a.removeAttribute("data-open");
+    });
+  }
+
   // Open / close wiring
   document.querySelectorAll("[data-open]").forEach(function (trigger) {
     trigger.addEventListener("click", function (e) {

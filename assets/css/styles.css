@@ -135,7 +135,7 @@ strong, b { font-weight: 700; }
 /* Hero media frame */
 .frame { position: relative; margin: 34px auto 0; max-width: 900px; border-radius: var(--r-card); overflow: hidden; border: 1px solid rgba(165, 180, 252, 0.55); box-shadow: 0 30px 70px rgba(6, 9, 20, 0.6); background: var(--midnight); }
 .frame img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: 60% 35%; }
-.frame__live { position: absolute; top: 14px; left: 14px; }
+.frame__live { position: absolute; top: 14px; left: 14px; display: none; }
 .frame__cap { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 40px 16px 14px; text-align: left; text-wrap: balance; font-family: var(--font-ui); font-weight: 700; font-size: 0.95rem; line-height: 1.35; color: var(--white); background: linear-gradient(180deg, transparent, rgba(6, 9, 20, 0.88)); }
 
 /* ---------- Snapshot (tilted print) ---------- */
@@ -363,7 +363,7 @@ strong, b { font-weight: 700; }
   .modal__card { padding: 30px 30px 34px; }
   .card { padding: 38px 36px; }
   .frame__cap { font-size: 1.05rem; padding: 44px 22px 18px; }
-  .frame__live { top: 18px; left: 18px; }
+  .frame__live { top: 18px; left: 18px; display: inline-flex; }
 }
 @media (min-width: 860px) {
   body { font-size: 1.125rem; }
