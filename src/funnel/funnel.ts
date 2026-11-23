@@ -61,10 +61,15 @@ export function initFunnel(root: HTMLElement) {
   }
 
   // $97 order buttons: one destination, set in src/funnel/config.ts (CHECKOUT_URL).
-  // Empty value keeps the preview popup. A URL sends every order button there instead.
+  // The buttons already link there in the markup; this keeps them in step with the config.
   const checkoutUrl = TAM_FUNNEL.CHECKOUT_URL || "";
+  // Old links ended in #order (a popup that no longer exists): send them to checkout.
+  if (checkoutUrl && location.hash === "#order") {
+    location.replace(checkoutUrl);
+    return;
+  }
   if (checkoutUrl) {
-    root.querySelectorAll('[data-open="order"]').forEach((a) => {
+    root.querySelectorAll('[data-open="order"], a[href="#order"]').forEach((a) => {
       a.setAttribute("href", checkoutUrl);
       a.removeAttribute("data-open");
     });
@@ -110,44 +115,6 @@ export function initFunnel(root: HTMLElement) {
     });
     if (location.hash === "#" + modal.id) openModal(modal);
   });
-
-  // Two step order form (preview popup on the sales page)
-  const order = document.getElementById("order");
-  if (order) {
-    const panels: Record<string, HTMLElement | null> = {
-      "1": document.getElementById("step-1"),
-      "2": document.getElementById("step-2"),
-    };
-    const tabs = order.querySelectorAll('[role="tab"]');
-    const showStep = (n: string) => {
-      Object.keys(panels).forEach((k) => {
-        const p = panels[k];
-        if (p) p.hidden = k !== n;
-      });
-      tabs.forEach((t) =>
-        t.setAttribute("aria-selected", String(t.getAttribute("data-step") === n)),
-      );
-      order.scrollTop = 0;
-      const heading = panels[n]?.querySelector("h2");
-      if (heading) {
-        heading.setAttribute("tabindex", "-1");
-        heading.focus();
-      }
-    };
-    if (panels["2"]) panels["2"].hidden = true;
-    order.querySelectorAll("[data-step]").forEach((el) => {
-      el.addEventListener("click", () => showStep(el.getAttribute("data-step") ?? "1"));
-    });
-    const bump = document.getElementById("bump") as HTMLInputElement | null;
-    const bumpRow = document.getElementById("bump-row");
-    const total = document.getElementById("order-total");
-    if (bump && bumpRow && total) {
-      bump.addEventListener("change", () => {
-        bumpRow.hidden = !bump.checked;
-        total.textContent = bump.checked ? "$144" : "$97";
-      });
-    }
-  }
 
   // Copy share link
   const share = root.querySelector<HTMLElement>("[data-share]");

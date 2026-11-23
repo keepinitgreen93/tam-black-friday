@@ -30,7 +30,7 @@ export function initThankYou() {
       e.preventDefault();
       const teammateName = val(teammateForm, "#t-name");
       const teammateEmail = val(teammateForm, "#t-email");
-      const note = teammateForm.querySelector<HTMLElement>("[data-preview-note]");
+      const note = teammateForm.querySelector<HTMLElement>("[data-teammate-status]");
       if (!teammateEmail) {
         teammateForm.querySelector<HTMLInputElement>("#t-email")?.focus();
         return;
