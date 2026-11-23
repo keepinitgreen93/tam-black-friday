@@ -9,8 +9,9 @@ const showPlan = params.get("show") === "plan";
 
 // $997 one-click upsell in the hero CTA area.
 // Both accept and decline go to ?show=plan, which opens the payment-plan popup.
+// On the ?show=plan reload, do NOT re-mount the $997 offer — only the plan popup shows.
 const upsellMount = document.getElementById("upsell-mount");
-if (upsellMount) {
+if (upsellMount && !showPlan) {
   if (cfg.UPSELL_PRODUCT_ID) {
     createRoot(upsellMount).render(
       <PaymentUpsellBlock
