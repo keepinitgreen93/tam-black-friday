@@ -107,57 +107,7 @@
     }
   }
 
-  // Preview forms: never submit anywhere
-  document.querySelectorAll("form[data-preview]").forEach(function (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var next = form.getAttribute("data-next");
-      if (next) { location.href = next; return; }
-      var note = form.querySelector("[data-preview-note]");
-      if (note) { note.hidden = false; }
-    });
-  });
-
-  // Thank-you page: booking picker (preview only, no booking is made)
-  var booker = document.getElementById("booker");
-  if (booker) {
-    var dayBox = booker.querySelector("[data-days]");
-    var timeBox = booker.querySelector("[data-times]");
-    var confirmBtn = booker.querySelector("[data-confirm]");
-    var notice = booker.querySelector("[data-notice]");
-    var picked = { day: null, time: null };
-    var fmt = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" });
-    var d = new Date();
-    var made = 0;
-    while (made < 8) {
-      d.setDate(d.getDate() + 1);
-      if (d.getDay() === 0 || d.getDay() === 6) { continue; }
-      addChip(dayBox, fmt.format(d), "day");
-      made += 1;
-    }
-    ["10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM"].forEach(function (t) { addChip(timeBox, t + " ET", "time"); });
-
-    function addChip(box, label, kind) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.textContent = label;
-      b.setAttribute("aria-pressed", "false");
-      b.addEventListener("click", function () {
-        box.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
-        b.setAttribute("aria-pressed", "true");
-        picked[kind] = label;
-        notice.hidden = true;
-      });
-      box.appendChild(b);
-    }
-
-    confirmBtn.addEventListener("click", function () {
-      notice.hidden = false;
-      notice.textContent = (picked.day && picked.time)
-        ? "Preview only. No call was booked for " + picked.day + " at " + picked.time + ". The live calendar connects in Product Champ."
-        : "Pick a day and a time first.";
-    });
-  }
+  // Preview form + booker handlers removed — live wiring is in src/funnel/*.ts
 
   // Copy share link
   var share = document.querySelector("[data-share]");

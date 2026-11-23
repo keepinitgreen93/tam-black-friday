@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://stcdn.leadconnectorhq.com; font-src 'self'; connect-src 'self' https://backend.leadconnectorhq.com https://stcdn.leadconnectorhq.com; base-uri 'self'; form-action 'self'">
 <title>The 2027 Growth Accelerator | Truly Authentic Marketing</title>
 <meta name="description" content="The 2027 Growth Accelerator: the guided path for owners who want to implement AI themselves. $997 this Black Friday week, regular price $1,497.">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
@@ -33,10 +33,7 @@
     </h1>
     <p class="hero__sub">The guided path for owners who want to implement AI themselves.</p>
     <p class="hero__price"><em>$997</em> this Black Friday week. Regular price $1,497.</p>
-    <div class="cta-row">
-      <a class="btn" href="/foundation">Yes, Add the 2027 Growth Accelerator for $997</a>
-      <a class="no-link" href="#plan" data-open="plan">No thanks, I'll continue with my $97 order.</a>
-    </div>
+    <div class="cta-row" id="upsell-mount"></div>
     <figure class="frame">
       <img src="/assets/img/chris-zoom-room-owners-800.webp" srcset="/assets/img/chris-zoom-room-owners-800.webp 800w, /assets/img/chris-zoom-room-owners-1400.webp 1400w" sizes="(min-width: 960px) 900px, 94vw" alt="Chris Iglesia hosting a group video call with business owners" width="1400" height="933" fetchpriority="high">
       <figcaption class="frame__cap">The weekly group call is where we work through it together.</figcaption>
@@ -100,7 +97,7 @@
       </ul>
       <p>We won't add up a giant total value. The price is $997, the math is yours.</p>
     </div>
-    <div class="cta-row"><a class="btn" href="/foundation">Yes, Add the 2027 Growth Accelerator for $997</a></div>
+    <div class="cta-row"><a class="btn" href="#main">Yes, Add the 2027 Growth Accelerator for $997</a></div>
   </div>
 </section>
 
@@ -146,7 +143,7 @@
       </details>
     </div>
     <div class="cta-row">
-      <a class="btn" href="/foundation">Yes, Add the 2027 Growth Accelerator for $997</a>
+      <a class="btn" href="#main">Yes, Add the 2027 Growth Accelerator for $997</a>
       <a class="no-link" href="#plan" data-open="plan">No thanks, I'll continue with my $97 order.</a>
     </div>
   </div>
@@ -174,13 +171,12 @@
     <a class="modal__close" href="#main" data-close aria-label="Close">&times;</a>
     <h2 id="plan-title">Want to split it up?</h2>
     <p>Same Accelerator, same everything, paid in 6 payments of $197. That's $1,182 in total, which is $185 more than paying $997 today. You're paying for the convenience of spreading it out, and nothing is removed.</p>
-    <div class="cta-row">
-      <a class="btn" href="/foundation">Yes, Split It Into 6 Payments of $197</a>
-      <a class="no-link" href="/foundation">No thanks, take me to the next step</a>
-    </div>
+    <div id="plan-upsell-mount"></div>
   </div>
 </div>
 
+<script src="/assets/js/config.js" defer></script>
 <script src="/assets/js/funnel.js" defer></script>
+<script type="module" src="/src/funnel/upsell.tsx"></script>
 </body>
 </html>
