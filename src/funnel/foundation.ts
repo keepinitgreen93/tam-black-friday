@@ -1,9 +1,8 @@
 /* TAM Black Friday 2026 — /foundation page.
    Wires the application form (contact + tag) and the booking calendar. */
-import { fireFoundationApplication } from "./tracking";
 import { wireCalendar } from "./calendar";
-
-const cfg = (window as any).TAM_FUNNEL;
+import { TAM_FUNNEL as cfg } from "./config";
+import { fireFoundationApplication } from "./tracking";
 
 // Custom field IDs registered for the 5 application questions.
 const FIELD_IDS = {
@@ -14,19 +13,23 @@ const FIELD_IDS = {
   q5: { id: "T3emr8bmKRTyx1j5rKMk", label: "When would you like to start?" },
 } as const;
 
-const form = document.getElementById("apply-form") as HTMLFormElement | null;
-const formCard = document.getElementById("apply-card");
-const calendarSection = document.getElementById("apply-calendar");
+const val = (root: ParentNode, sel: string) =>
+  root.querySelector<HTMLInputElement | HTMLTextAreaElement>(sel)?.value?.trim() || "";
 
-if (form) {
+export function initFoundation() {
+  const form = document.getElementById("apply-form") as HTMLFormElement | null;
+  const formCard = document.getElementById("apply-card");
+  const calendarSection = document.getElementById("apply-calendar");
+  if (!form) return;
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const firstName = (form.querySelector("#af-first") as HTMLInputElement)?.value?.trim() || "";
-    const lastName = (form.querySelector("#af-last") as HTMLInputElement)?.value?.trim() || "";
-    const email = (form.querySelector("#af-email") as HTMLInputElement)?.value?.trim() || "";
-    const phone = (form.querySelector("#af-phone") as HTMLInputElement)?.value?.trim() || "";
+    const firstName = val(form, "#af-first");
+    const lastName = val(form, "#af-last");
+    const email = val(form, "#af-email");
+    const phone = val(form, "#af-phone");
 
-    const note = form.querySelector("[data-apply-note]") as HTMLElement | null;
+    const note = form.querySelector<HTMLElement>("[data-apply-note]");
     if (!firstName || !lastName || !email || !phone) {
       if (note) {
         note.hidden = false;
@@ -37,12 +40,7 @@ if (form) {
 
     const answers: Record<string, { value: string; label: string }> = {};
     (Object.keys(FIELD_IDS) as (keyof typeof FIELD_IDS)[]).forEach((k) => {
-      const el = form.querySelector(`#af-${k}` as string) as
-        | HTMLTextAreaElement
-        | HTMLInputElement
-        | null;
-      const value = el?.value?.trim() || "";
-      answers[FIELD_IDS[k].id] = { value, label: FIELD_IDS[k].label };
+      answers[FIELD_IDS[k].id] = { value: val(form, `#af-${k}`), label: FIELD_IDS[k].label };
     });
 
     // Fire the tracking event (creates/updates contact, CRM tags foundation-applicant).
@@ -55,7 +53,7 @@ if (form) {
       calendarSection.scrollIntoView({ behavior: "smooth" });
       const booker = calendarSection.querySelector<HTMLElement>("#booker");
       if (booker) {
-        wireCalendar({
+        void wireCalendar({
           container: booker,
           calendarId: cfg.CALENDAR_ID,
           locationId: cfg.LOCATION_ID,

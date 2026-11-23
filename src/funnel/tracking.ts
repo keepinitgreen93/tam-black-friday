@@ -17,7 +17,9 @@ const getTrackingSessionId = () => {
   try {
     const sid = document.cookie.match(/(?:^|;\s*)__vibe_sid=([0-9a-f-]{36})(?:;|$)/)?.[1];
     if (sid) return sid;
-  } catch {}
+  } catch {
+    /* cookies unavailable: fall through to a fresh id */
+  }
   return crypto.randomUUID();
 };
 
@@ -57,6 +59,7 @@ export function postTrackingEvent(
     method: "POST",
     headers: { version: "2021-07-28" },
     body,
+    keepalive: true, // survive the page change that follows a submit
   }).catch(() => {}); // Fire-and-forget — don't block form UX
 }
 
@@ -87,7 +90,7 @@ const basePayload = (formId: string, formName: string) => ({
 export function fireBuyerTracking(buyer: {
   name: string;
   email: string;
-  phone?: string;
+  phone?: string | undefined;
 }) {
   const parts = buyer.name.trim().split(/\s+/);
   const firstName = parts[0] || "";
@@ -142,18 +145,22 @@ export function fireFoundationApplication(data: {
   );
 }
 
-/** Fire a tracking event for the teammate addition on the thank-you page. */
-export function fireTeammateTracking(data: {
-  email: string;
-  teammateName: string;
-  teammateEmail: string;
-}) {
+/** Fire a tracking event for the teammate addition on the thank-you page.
+ *  Creates/updates the teammate as a contact (formId "bf2026-teammate"). */
+export function fireTeammateTracking(data: { teammateName: string; teammateEmail: string }) {
+  const parts = data.teammateName.trim().split(/\s+/).filter(Boolean);
+  const firstName = parts[0] || "";
+  const lastName = parts.slice(1).join(" ");
   postTrackingEvent({
     ...basePayload("bf2026-teammate", "BF2026 Teammate"),
     formData: {
-      email: data.email,
+      ...(firstName ? { first_name: firstName } : {}),
+      ...(lastName ? { last_name: lastName } : {}),
+      email: data.teammateEmail,
     },
     formLabels: {
+      first_name: "First name",
+      last_name: "Last name",
       email: "Email",
     },
   });

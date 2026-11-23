@@ -3,8 +3,7 @@
 const BOOKING_API_URL = "https://backend.leadconnectorhq.com";
 const VIBE_API_URL = "https://backend.leadconnectorhq.com/vibe-ai";
 
-const getBrowserTimezone = () =>
-  Intl.DateTimeFormat().resolvedOptions().timeZone;
+const getBrowserTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 const clampAvailabilityRange = (startMs: number, endMs: number) => {
   const today = new Date();
@@ -28,9 +27,7 @@ async function fetchCalendarFreeSlots(
     endDate: String(endDate),
     timezone: getBrowserTimezone(),
   });
-  const response = await fetch(
-    `${BOOKING_API_URL}/calendars/${calendarId}/free-slots?${params}`,
-  );
+  const response = await fetch(`${BOOKING_API_URL}/calendars/${calendarId}/free-slots?${params}`);
   if (!response.ok) throw new Error("Failed to fetch calendar availability");
   return response.json();
 }
@@ -117,7 +114,9 @@ export async function wireCalendar(opts: WireCalendarOptions) {
     return;
   }
 
-  const dates = Object.keys(slots).filter((d) => slots[d].slots?.length > 0).sort();
+  const dates = Object.keys(slots)
+    .filter((d) => (slots[d]?.slots?.length ?? 0) > 0)
+    .sort();
   if (dates.length === 0) {
     notice.hidden = false;
     notice.textContent =
@@ -141,14 +140,16 @@ export async function wireCalendar(opts: WireCalendarOptions) {
       notice.hidden = true;
       // Render time chips for this day
       timeBox.innerHTML = "";
-      for (const slot of slots[date].slots) {
+      for (const slot of slots[date]?.slots ?? []) {
         const slotDate = new Date(slot);
         const tb = document.createElement("button");
         tb.type = "button";
         tb.textContent = timeFmt.format(slotDate);
         tb.setAttribute("aria-pressed", "false");
         tb.addEventListener("click", () => {
-          timeBox.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+          timeBox
+            .querySelectorAll("button")
+            .forEach((x) => x.setAttribute("aria-pressed", "false"));
           tb.setAttribute("aria-pressed", "true");
           pickedSlot = slot;
           notice.hidden = true;
@@ -183,7 +184,7 @@ export async function wireCalendar(opts: WireCalendarOptions) {
         email: contact.email,
         phone: contact.phone,
         selectedSlot: pickedSlot,
-        customFields: opts.customFields,
+        ...(opts.customFields ? { customFields: opts.customFields } : {}),
       });
       notice.hidden = false;
       notice.textContent = "Your call is booked. Check your email for the confirmation.";
@@ -193,8 +194,7 @@ export async function wireCalendar(opts: WireCalendarOptions) {
       confirmBtn.disabled = false;
       confirmBtn.textContent = "Book My Call";
       notice.hidden = false;
-      notice.textContent =
-        "Something went wrong. Please try again or email us.";
+      notice.textContent = "Something went wrong. Please try again or email us.";
     }
   });
 }
