@@ -3,10 +3,7 @@
    Flow: order summary + bump → "Go to Payment" → block step 1 (contact) → step 2 (payment). */
 import { createRoot } from "react-dom/client";
 import { useLayoutEffect, useState } from "react";
-import {
-  PaymentCheckoutBlock,
-  isCheckoutReturn,
-} from "../integrations/payments";
+import { PaymentCheckoutBlock, isCheckoutReturn } from "../integrations/payments";
 import { fireBuyerTracking } from "./tracking";
 
 const cfg = (window as any).TAM_FUNNEL;
@@ -36,9 +33,8 @@ function CheckoutApp() {
   if (!cfg.MAIN_PRODUCT_ID || !cfg.MAIN_PRICE_ID) {
     return (
       <p className="preview-flag">
-        <strong>Setup needed.</strong> Add the products in More → Payments, then
-        set MAIN_PRODUCT_ID and MAIN_PRICE_ID in{" "}
-        <code>assets/js/config.js</code>.
+        <strong>Setup needed.</strong> Add the products in More → Payments, then set
+        MAIN_PRODUCT_ID and MAIN_PRICE_ID in <code>assets/js/config.js</code>.
       </p>
     );
   }
@@ -63,9 +59,9 @@ function CheckoutApp() {
       <div className="summary">
         <p>
           <b>Hire Your AI Agent in 3 Days, Live.</b> Tuesday, December 8 to
-          Thursday, December 10, 12:00 to 1:30 PM Eastern. You plus one
-          teammate. Replays, Starter Skills, Company Brain guide, Texting Ready
-          Kit, 90 days of Product Champ, 90 days of a TAM hosted AI agent.
+          Thursday, December 10, 12:00 to 1:30 PM Eastern. You plus one teammate.
+          Replays, Starter Skills, Company Brain guide, Texting Ready Kit, 90 days
+          of Product Champ, 90 days of a TAM hosted AI agent.
         </p>
         <div className="row">
           <span>Hire Your AI Agent in 3 Days, Live</span>
@@ -86,18 +82,12 @@ function CheckoutApp() {
       <div className="bump">
         <h3>Done With You Setup Check</h3>
         <p>
-          Get a TAM team member on a private screen share after Day 1 to check
-          your Company Brain and agent are set up right, so Days 2 and 3 start
-          clean.
+          Get a TAM team member on a private screen share after Day 1 to check your
+          Company Brain and agent are set up right, so Days 2 and 3 start clean.
         </p>
         <ul className="ticks">
-          <li>
-            A private 30 minute screen share with a TAM team member, booked
-            within 14 days of the event.
-          </li>
-          <li>
-            We check your Company Brain and agent together and fix what's off.
-          </li>
+          <li>A private 30 minute screen share with a TAM team member, booked within 14 days of the event.</li>
+          <li>We check your Company Brain and agent together and fix what's off.</li>
           <li>You leave with a short list of what to do next.</li>
         </ul>
         <label className="check">
@@ -106,9 +96,7 @@ function CheckoutApp() {
             checked={bump}
             onChange={(e) => setBump(e.target.checked)}
           />
-          <span>
-            YES, add the Done With You Setup Check to my order for just $47.
-          </span>
+          <span>YES, add the Done With You Setup Check to my order for just $47.</span>
         </label>
       </div>
 

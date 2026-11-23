@@ -1,8 +1,7 @@
 /* TAM Black Friday 2026 — form tracking + contact tagging.
    Fires external-tracking events to create/update CRM contacts.
    The CRM applies tags via workflows keyed on formId. */
-const TRACKING_URL =
-  "https://backend.leadconnectorhq.com/external-tracking/events";
+const TRACKING_URL = "https://backend.leadconnectorhq.com/external-tracking/events";
 const TRACKING_ID = "tk_319b928ae52d420c9c8f636580f71ac3";
 const LOCATION_ID = "1YuXNjATfxW5vhLfX1pq";
 const PROJECT_ID = "1794979071005660821";
@@ -16,9 +15,7 @@ type TrackingCustomField = { value?: unknown; label: string };
 
 const getTrackingSessionId = () => {
   try {
-    const sid = document.cookie.match(
-      /(?:^|;\s*)__vibe_sid=([0-9a-f-]{36})(?:;|$)/,
-    )?.[1];
+    const sid = document.cookie.match(/(?:^|;\s*)__vibe_sid=([0-9a-f-]{36})(?:;|$)/)?.[1];
     if (sid) return sid;
   } catch {}
   return crypto.randomUUID();
@@ -127,10 +124,7 @@ export function fireFoundationApplication(data: {
   }
   postTrackingEvent(
     {
-      ...basePayload(
-        "foundation-application",
-        "AI Growth Foundation Application",
-      ),
+      ...basePayload("foundation-application", "AI Growth Foundation Application"),
       formData: {
         first_name: data.firstName,
         last_name: data.lastName,

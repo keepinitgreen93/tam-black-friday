@@ -95,8 +95,7 @@ export async function wireCalendar(opts: WireCalendarOptions) {
 
   const dayBox = container.querySelector<HTMLElement>("[data-days]");
   const timeBox = container.querySelector<HTMLElement>("[data-times]");
-  const confirmBtn =
-    container.querySelector<HTMLButtonElement>("[data-confirm]");
+  const confirmBtn = container.querySelector<HTMLButtonElement>("[data-confirm]");
   const notice = container.querySelector<HTMLElement>("[data-notice]");
   if (!dayBox || !timeBox || !confirmBtn || !notice) return;
 
@@ -118,9 +117,7 @@ export async function wireCalendar(opts: WireCalendarOptions) {
     return;
   }
 
-  const dates = Object.keys(slots)
-    .filter((d) => slots[d].slots?.length > 0)
-    .sort();
+  const dates = Object.keys(slots).filter((d) => slots[d].slots?.length > 0).sort();
   if (dates.length === 0) {
     notice.hidden = false;
     notice.textContent =
@@ -137,9 +134,7 @@ export async function wireCalendar(opts: WireCalendarOptions) {
     b.textContent = dayFmt.format(d);
     b.setAttribute("aria-pressed", "false");
     b.addEventListener("click", () => {
-      dayBox
-        .querySelectorAll("button")
-        .forEach((x) => x.setAttribute("aria-pressed", "false"));
+      dayBox.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", "false"));
       b.setAttribute("aria-pressed", "true");
       pickedDay = date;
       pickedSlot = null;
@@ -153,9 +148,7 @@ export async function wireCalendar(opts: WireCalendarOptions) {
         tb.textContent = timeFmt.format(slotDate);
         tb.setAttribute("aria-pressed", "false");
         tb.addEventListener("click", () => {
-          timeBox
-            .querySelectorAll("button")
-            .forEach((x) => x.setAttribute("aria-pressed", "false"));
+          timeBox.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", "false"));
           tb.setAttribute("aria-pressed", "true");
           pickedSlot = slot;
           notice.hidden = true;
@@ -168,12 +161,7 @@ export async function wireCalendar(opts: WireCalendarOptions) {
 
   confirmBtn.addEventListener("click", async () => {
     const contact = opts.getContact();
-    if (
-      !contact.firstName ||
-      !contact.lastName ||
-      !contact.email ||
-      !contact.phone
-    ) {
+    if (!contact.firstName || !contact.lastName || !contact.email || !contact.phone) {
       notice.hidden = false;
       notice.textContent = "Please add your name, email and phone first.";
       return;
@@ -198,8 +186,7 @@ export async function wireCalendar(opts: WireCalendarOptions) {
         customFields: opts.customFields,
       });
       notice.hidden = false;
-      notice.textContent =
-        "Your call is booked. Check your email for the confirmation.";
+      notice.textContent = "Your call is booked. Check your email for the confirmation.";
       confirmBtn.textContent = "Booked ✓";
       opts.onBooked?.();
     } catch {
