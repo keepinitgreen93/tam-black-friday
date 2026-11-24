@@ -629,3 +629,16 @@ strong, b { font-weight: 700; }
 main p, main li { text-wrap: pretty; }
 
 .item__head p { margin: 0 !important; }
+
+/* ---------- Video slots (data-vsl). Hidden until the file exists in R2; see initVsl in src/funnel/funnel.ts ---------- */
+.vsl { position: relative; width: 100%; max-width: 760px; margin: 26px auto 0; aspect-ratio: 16 / 9; border-radius: var(--r-card); overflow: hidden; border: 1px solid rgba(227, 231, 244, 0.3); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45); background: var(--midnight); }
+.vsl[hidden] { display: none; }
+.vsl video { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--midnight); }
+.vsl video:focus-visible { outline: 3px solid var(--focus, #FFFFFF); outline-offset: -3px; }
+.vsl--light { margin: 0 auto 26px; border-color: var(--line); box-shadow: 0 12px 26px rgba(23, 21, 59, 0.18); }
+@media (min-width: 960px) {
+  /* Sales hero: the video sits next to the order button so the button stays above the fold. */
+  .hero__act.has-vsl { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: center; gap: 40px; max-width: 980px; margin: 32px auto 0; }
+  .hero__act.has-vsl .vsl { max-width: none; margin: 0; }
+  .hero__act.has-vsl .cta-row { margin-top: 0; }
+}

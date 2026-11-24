@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { PaymentUpsellBlock } from "../integrations/payments";
 import { MountInto } from "./FunnelPage";
 import { openModal } from "./funnel";
+import { IS_PREVIEW } from "./preview";
 import { resolveFunnelProducts, type FunnelProducts } from "./products";
 import { PaymentStyles, paymentTheme } from "./theme";
 
@@ -27,7 +28,55 @@ function SetupNeeded({ what, id }: { what: string; id: string }) {
   );
 }
 
+/** Static preview build: the offer buttons with no payment behind them.
+    "Yes" says so on the page. "No" keeps the real path: plan popup, then /foundation. */
+function UpsellPreview() {
+  const [asked, setAsked] = useState<"full" | "plan" | null>(null);
+  const note = (
+    <p className="notice" role="status">
+      <strong>Preview build.</strong> Payment is not connected on this preview page, so nothing
+      was added or charged.
+    </p>
+  );
+  return (
+    <>
+      <MountInto id="upsell-mount">
+        <button type="button" className="btn" data-upsell-yes onClick={() => setAsked("full")}>
+          Yes, Add the 2027 Growth Accelerator for $997
+        </button>
+        <button
+          type="button"
+          className="no-link"
+          data-upsell-no
+          onClick={() => {
+            const plan = document.getElementById("plan");
+            if (plan) openModal(plan);
+          }}
+        >
+          No thanks, I'll continue with my $97 order.
+        </button>
+        {asked === "full" ? note : null}
+      </MountInto>
+      <MountInto id="plan-upsell-mount">
+        <div className="cta-row">
+          <button type="button" className="btn" data-plan-yes onClick={() => setAsked("plan")}>
+            Yes, Split It Into 6 Payments of $197
+          </button>
+          <a className="no-link" href={NEXT_PATH} data-plan-no>
+            No thanks, I'll continue with my $97 order.
+          </a>
+          {asked === "plan" ? note : null}
+        </div>
+      </MountInto>
+    </>
+  );
+}
+
 export function Upsell() {
+  return IS_PREVIEW ? <UpsellPreview /> : <UpsellLive />;
+}
+
+function UpsellLive() {
   const [products, setProducts] = useState<FunnelProducts | null>(null);
 
   useEffect(() => {

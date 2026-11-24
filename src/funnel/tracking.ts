@@ -1,6 +1,8 @@
 /* TAM Black Friday 2026 — form tracking + contact tagging.
    Fires external-tracking events to create/update CRM contacts.
    The CRM applies tags via workflows keyed on formId. */
+import { IS_PREVIEW } from "./preview";
+
 const TRACKING_URL = "https://backend.leadconnectorhq.com/external-tracking/events";
 const TRACKING_ID = "tk_319b928ae52d420c9c8f636580f71ac3";
 const LOCATION_ID = "1YuXNjATfxW5vhLfX1pq";
@@ -35,6 +37,7 @@ export function postTrackingEvent(
     customFields?: Record<RegisteredCustomFieldId, TrackingCustomField>;
   } = {},
 ) {
+  if (IS_PREVIEW) return; // Static preview build: nothing is sent to the CRM.
   const { customFields = {} } = options;
   const eventPayload = {
     ...trackingPayload,

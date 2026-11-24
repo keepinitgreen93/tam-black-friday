@@ -76,4 +76,82 @@ VIBE_SANDBOX=1 npm run build
 npx wrangler@latest dev -c dist/server/wrangler.json --port 8788
 ```
 
+## Static preview on Cloudflare Pages
+
+The review copy at https://tam-bf-2026-preview.pages.dev is a static build of these same pages,
+published to the Cloudflare Pages project `tam-bf-2026-preview` (production branch `preview`).
+It is separate from the AI Studio app and never takes a payment.
+
+Build it:
+
+```sh
+npm install
+node scripts/build-static-preview.mjs
+```
+
+That script builds the app with `VITE_BF_PREVIEW=1`, asks the built server for each route
+(`/`, `/install`, `/checkout`, `/growth-accelerator`, `/foundation`, `/thank-you`) and saves the
+HTML to `pages-preview/site/` next to the hashed bundles in `assets/`. The pages hydrate from
+those bundles, so nothing loads a `/src/*.ts` path. It also writes noindex headers and a
+`Disallow: /` robots file.
+
+`VITE_BF_PREVIEW=1` (see `src/funnel/preview.ts`) is what keeps the preview safe:
+
+- `/checkout` shows the order summary and a note. The payment form is never loaded.
+- `/growth-accelerator` shows its Yes and No buttons. Yes shows a note, No opens the payment plan
+  popup, and the popup's No goes to `/foundation`. Nothing is charged.
+- The application and teammate forms say they are not connected, and nothing is sent to the CRM.
+- Every footer gets the line "Preview build. No payment, form or tracking is connected."
+
+Without that variable, as in the AI Studio build, none of this applies and the pages sell for real.
+
+Deploy it (run from `pages-preview/`, which holds the Pages config and the video function):
+
+```sh
+cd pages-preview
+npx wrangler pages deployment list --project-name tam-bf-2026-preview   # note the current ID first, for rollback
+npx wrangler pages deploy site --project-name tam-bf-2026-preview --branch preview --commit-dirty=true
+```
+
+If Wrangler reports error 9109, a stale `CLOUDFLARE_API_TOKEN` is set: put
+`env -u CLOUDFLARE_API_TOKEN` in front of the command. Do not run `wrangler login`.
+
+To roll back, open the project in the Cloudflare dashboard, pick the earlier deployment and
+choose "Rollback to this deployment".
+
+## Videos
+
+The sales page, the upsell and the thank-you page each have a video slot (`data-vsl`). A slot
+stays hidden until its video file exists, so a page never shows a broken player.
+
+| Page | Video | Poster | Captions |
+|---|---|---|---|
+| `/` and `/install` | `bf-vsl_web.mp4` | `bf-vsl_poster.jpg` | `bf-vsl_captions.vtt` |
+| `/growth-accelerator` | `growth-accel-2027_web.mp4` | `growth-accel-2027_poster.jpg` | `growth-accel-2027_captions.vtt` |
+| `/thank-you` | `bf-welcome-next-steps_web.mp4` | `bf-welcome-next-steps_poster.jpg` | `bf-welcome-next-steps_captions.vtt` |
+
+The files live in the private R2 bucket `tam-bf-2026-video`. It has no public URL. The Pages
+Function `pages-preview/functions/v/[file].js` serves them at `/v/<file>` through the `VIDEO`
+binding in `pages-preview/wrangler.jsonc`, with HTTP Range support so the player can seek.
+
+Upload a video (no deploy needed, the slot appears on the next page load). Send the poster and
+captions first so the player is complete the moment the video lands:
+
+```sh
+npx wrangler r2 object put tam-bf-2026-video/bf-vsl_poster.jpg --file ./bf-vsl_poster.jpg --content-type image/jpeg --remote
+npx wrangler r2 object put tam-bf-2026-video/bf-vsl_captions.vtt --file ./bf-vsl_captions.vtt --content-type text/vtt --remote
+npx wrangler r2 object put tam-bf-2026-video/bf-vsl_web.mp4 --file ./bf-vsl_web.mp4 --content-type video/mp4 --remote
+```
+
+Export the MP4 as H.264 video with AAC audio and "fast start" on, so it plays before it has
+fully downloaded. Wrangler uploads files up to about 300 MB this way. To take a video down,
+delete the MP4: `npx wrangler r2 object delete tam-bf-2026-video/bf-vsl_web.mp4 --remote`.
+
+How a slot decides: the page asks `/v/<file>?probe=1`, which always answers 200 with
+`{"exists": true}` or `{"exists": false}`. Only on `true` is the player added to the page. If the
+video later fails to play, the slot hides again. The code is `initVsl` in `src/funnel/funnel.ts`.
+
+The `/v/` route exists only on the Cloudflare Pages preview. On AI Studio hosting the slots
+simply stay hidden until the same route is added there.
+
 Design tokens, image sources and attributions: `ATTRIBUTION.md`.
