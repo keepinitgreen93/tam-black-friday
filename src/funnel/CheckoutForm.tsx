@@ -64,8 +64,9 @@ function CheckoutBlock() {
       <PaymentStyles />
       <p className="checkout-intro">
         <b>Hire Your AI Agent in 3 Days, Live.</b> Tuesday, December 8 to Thursday, December 10,
-        12:00 to 1:30 PM Eastern. You plus one teammate. Replays, Starter Skills, Company Brain
-        guide, Texting Ready Kit, 90 days of Product Champ, 90 days of a TAM hosted AI agent.
+        12:00 to 1:30 PM Eastern. You plus one teammate. Replays, Starter Skills,
+        Company Brain Kit (setup plus guide), Texting Ready Kit, 90 days of Product Champ,
+        90 days of a TAM hosted AI agent.
       </p>
       <PaymentCheckoutBlock
         layout="two-step"
