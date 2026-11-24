@@ -179,7 +179,6 @@ strong, b { font-weight: 700; }
 .story .tag { margin-bottom: 12px; color: var(--coral-soft); }
 .story .h-ui { margin-bottom: 12px; color: var(--white); }
 .story p { color: var(--on-dark); }
-.stories > .story:only-child { grid-column: 1 / -1; max-width: 640px; margin-left: auto; margin-right: auto; }
 .disclaimer { margin: 40px auto 0; max-width: 780px; text-align: center; color: var(--on-dark); font-size: 1rem; line-height: 1.55; border-top: 1px solid var(--rule-dark); padding: 18px 0 0; }
 
 /* ---------- Feature rows (a day with your agent) ---------- */
@@ -409,7 +408,7 @@ strong, b { font-weight: 700; }
   .reason { display: grid; grid-template-columns: 12rem 1fr; column-gap: 28px; padding: 34px 0 38px; }
   .reason .tag { grid-row: 1 / span 2; margin: 0.5em 0 0; }
   .reason .display, .reason p { grid-column: 2; }
-  .stories { grid-template-columns: 1fr 1fr; gap: 56px; }
+  .stories { grid-template-columns: repeat(3, 1fr); gap: 40px; }
   .story { padding-top: 26px; }
   .rows { grid-template-columns: 1fr 1fr; column-gap: 48px; }
   .bio { grid-template-columns: 340px 1fr; gap: 64px; }
