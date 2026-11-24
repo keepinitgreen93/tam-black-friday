@@ -11,9 +11,9 @@ export const Route = createFileRoute("/install")({
       {
         name: "description",
         content:
-          "How I help local service businesses land more clients through the holidays and the 2027 slowdown, without learning tech, babysitting AI chats, or adding hours to their week. 3 live sessions, December 8 to 10. $97 for you and a teammate.",
+          "How I help local service businesses land more clients through the holidays and the 2027 slowdown, without learning tech, copying and pasting prompts, or hiring another person. 3 live sessions, December 8 to 10. $97 for you and a teammate.",
       },
-      { property: "og:description", content: "How I help local service businesses land more clients through the holidays and the 2027 slowdown, without learning tech, babysitting AI chats, or adding hours to their week. 3 live sessions, December 8 to 10. $97 for you and a teammate." },
+      { property: "og:description", content: "How I help local service businesses land more clients through the holidays and the 2027 slowdown, without learning tech, copying and pasting prompts, or hiring another person. 3 live sessions, December 8 to 10. $97 for you and a teammate." },
     ],
   }),
   component: InstallPage,
