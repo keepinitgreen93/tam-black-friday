@@ -8,7 +8,7 @@ Funnel for Truly Authentic Marketing, built on the AI Studio app scaffold
 | Route | Route file | Markup | Job |
 |---|---|---|---|
 | `/` and `/install` | `src/routes/index.tsx`, `install.tsx` | `src/funnel/pages/index.html` | Sales page. All 11 order buttons go to `/checkout` |
-| `/checkout` | `src/routes/checkout.tsx` | `pages/checkout.html` | On-page $97 order form with the $47 order bump (`src/funnel/CheckoutForm.tsx`) |
+| `/checkout` | `src/routes/checkout.tsx` | `pages/checkout.html` | On-page $97 order form, single product (`src/funnel/CheckoutForm.tsx`) |
 | `/growth-accelerator` | `src/routes/growth-accelerator.tsx` | `pages/growth-accelerator.html` | One-click $997 upsell, 6 x $197 plan popup on "No" (`src/funnel/UpsellOffer.tsx`) |
 | `/foundation` | `src/routes/foundation.tsx` | `pages/foundation.html` | AI Growth Foundation application, then the booking calendar |
 | `/thank-you` | `src/routes/thank-you.tsx` | `pages/thank-you.html` | Booking calendar, Zoom + calendar (.ics) details, teammate form, Product Champ login |
@@ -29,23 +29,21 @@ Funnel for Truly Authentic Marketing, built on the AI Studio app scaffold
 
 ## Products and price IDs
 
-Create these four products in AI Studio: More -> Payments.
+Create these three products in AI Studio: More -> Payments.
 
 | Product | Price | Used on |
 |---|---|---|
 | Hire Your AI Agent in 3 Days, Live | $97 one time | `/checkout` |
-| Done With You Setup Check | $47 one time | `/checkout` order bump |
 | 2027 Growth Accelerator | $997 one time | `/growth-accelerator` |
 | 2027 Growth Accelerator, payment plan | $197 a month, 6 payments | `/growth-accelerator` popup |
 
 The funnel finds them three ways, first match wins (`src/funnel/config.ts`, `src/funnel/products.ts`):
 
-1. Env vars: `VITE_BF_MAIN_PRODUCT_ID`, `VITE_BF_MAIN_PRICE_ID`, `VITE_BF_BUMP_PRODUCT_ID`,
-   `VITE_BF_BUMP_PRICE_ID`, `VITE_BF_UPSELL_PRODUCT_ID`, `VITE_BF_UPSELL_PRICE_ID`,
-   `VITE_BF_PLAN_PRODUCT_ID`, `VITE_BF_PLAN_PRICE_ID`.
+1. Env vars: `VITE_BF_MAIN_PRODUCT_ID`, `VITE_BF_MAIN_PRICE_ID`, `VITE_BF_UPSELL_PRODUCT_ID`,
+   `VITE_BF_UPSELL_PRICE_ID`, `VITE_BF_PLAN_PRODUCT_ID`, `VITE_BF_PLAN_PRICE_ID`.
 2. The `IDS` object at the top of `src/funnel/config.ts`.
 3. Automatically, by price, from this project's Payments catalog: exactly one $97 one-time price,
-   one $47 one-time, one $997 one-time and one $197 recurring. If two products share one of those
+   one $997 one-time and one $197 recurring. If two products share one of those
    prices, set the IDs explicitly.
 
 Until the $97 product exists, `/checkout` shows a "Setup needed" note instead of the order form.

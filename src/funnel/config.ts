@@ -10,7 +10,6 @@
      3. Leave both blank: the funnel looks the products up in this
         project's Payments catalog (More → Payments) by price:
           $97 one time  -> main offer
-          $47 one time  -> order bump
           $997 one time -> 2027 Growth Accelerator
           $197 recurring -> 6 payment plan
         See src/funnel/products.ts.
@@ -21,9 +20,6 @@ const IDS = {
   // Main offer: "Hire Your AI Agent in 3 Days, Live" — $97 one time.
   MAIN_PRODUCT_ID: "",
   MAIN_PRICE_ID: "",
-  // Optional order bump: "Done With You Setup Check" — $47 one time.
-  BUMP_PRODUCT_ID: "",
-  BUMP_PRICE_ID: "",
   // One-click upsell: "2027 Growth Accelerator" — $997 one time.
   UPSELL_PRODUCT_ID: "",
   UPSELL_PRICE_ID: "",
@@ -41,8 +37,6 @@ export const TAM_FUNNEL = {
 
   MAIN_PRODUCT_ID: pick(import.meta.env["VITE_BF_MAIN_PRODUCT_ID"], IDS.MAIN_PRODUCT_ID),
   MAIN_PRICE_ID: pick(import.meta.env["VITE_BF_MAIN_PRICE_ID"], IDS.MAIN_PRICE_ID),
-  BUMP_PRODUCT_ID: pick(import.meta.env["VITE_BF_BUMP_PRODUCT_ID"], IDS.BUMP_PRODUCT_ID),
-  BUMP_PRICE_ID: pick(import.meta.env["VITE_BF_BUMP_PRICE_ID"], IDS.BUMP_PRICE_ID),
   UPSELL_PRODUCT_ID: pick(import.meta.env["VITE_BF_UPSELL_PRODUCT_ID"], IDS.UPSELL_PRODUCT_ID),
   UPSELL_PRICE_ID: pick(import.meta.env["VITE_BF_UPSELL_PRICE_ID"], IDS.UPSELL_PRICE_ID),
   PLAN_PRODUCT_ID: pick(import.meta.env["VITE_BF_PLAN_PRODUCT_ID"], IDS.PLAN_PRODUCT_ID),

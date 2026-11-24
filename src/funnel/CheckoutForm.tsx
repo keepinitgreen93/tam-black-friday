@@ -1,6 +1,6 @@
 /* TAM Black Friday 2026 — /checkout order form.
-   Mounts the sealed 2-step PaymentCheckoutBlock on the page with the $47 order bump.
-   Flow: order summary + bump → "Go to Payment" → block step 1 (contact) → step 2 (payment)
+   Mounts the sealed 2-step PaymentCheckoutBlock on the page: one product, $97.
+   Flow: order summary → "Go to Payment" → block step 1 (contact) → step 2 (payment)
    → /growth-accelerator (one-click upsell). */
 import { useEffect, useLayoutEffect, useState } from "react";
 
@@ -13,7 +13,6 @@ const SELECTION_KEY = "vibe.checkout.selection.v1";
 
 export function Checkout() {
   const [products, setProducts] = useState<FunnelProducts | null>(null);
-  const [bump, setBump] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [isReturn] = useState(() => isCheckoutReturn());
   const started = isReturn || showCheckout;
@@ -29,20 +28,18 @@ export function Checkout() {
   }, []);
 
   const mainPriceId = products?.main?.priceId ?? "";
-  const bumpPriceId = products?.bump?.priceId ?? "";
 
   // Persist the selection before the block's effect reads it.
   // useLayoutEffect runs before the child's useEffect, so the selection is ready.
   useLayoutEffect(() => {
     if (!started || isReturn || !mainPriceId) return; // Don't overwrite on payment return
-    const items: { priceId: string; quantity: number }[] = [{ priceId: mainPriceId, quantity: 1 }];
-    if (bump && bumpPriceId) items.push({ priceId: bumpPriceId, quantity: 1 });
+    const items = [{ priceId: mainPriceId, quantity: 1 }];
     try {
       localStorage.setItem(SELECTION_KEY, JSON.stringify({ items }));
     } catch {
       /* storage refused: the block reports an empty cart */
     }
-  }, [bump, started, isReturn, mainPriceId, bumpPriceId]);
+  }, [started, isReturn, mainPriceId]);
 
   if (isReturn) {
     return <CheckoutBlock />;
@@ -75,39 +72,11 @@ export function Checkout() {
           <span>Hire Your AI Agent in 3 Days, Live</span>
           <span>$97 one time</span>
         </div>
-        {bump && (
-          <div className="row">
-            <span>Done With You Setup Check</span>
-            <span>$47</span>
-          </div>
-        )}
         <div className="row total">
           <span>Total due today:</span>
-          <span>{bump ? "$144" : "$97"}</span>
+          <span>$97</span>
         </div>
       </div>
-
-      {products.bump && (
-        <div className="bump">
-          <h3>Done With You Setup Check</h3>
-          <p>
-            Get a TAM team member on a private screen share after Day 1 to check your Company Brain
-            and agent are set up right, so Days 2 and 3 start clean.
-          </p>
-          <ul className="ticks">
-            <li>
-              A private 30 minute screen share with a TAM team member, booked within 14 days of the
-              event.
-            </li>
-            <li>We check your Company Brain and agent together and fix what's off.</li>
-            <li>You leave with a short list of what to do next.</li>
-          </ul>
-          <label className="check">
-            <input type="checkbox" checked={bump} onChange={(e) => setBump(e.target.checked)} />
-            <span>YES, add the Done With You Setup Check to my order for just $47.</span>
-          </label>
-        </div>
-      )}
 
       <div className="cta-row">
         <button type="button" className="btn" onClick={() => setShowCheckout(true)}>
