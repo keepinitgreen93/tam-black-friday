@@ -2,6 +2,7 @@
    Wires the application form (contact + tag) and the booking calendar. */
 import { wireCalendar } from "./calendar";
 import { TAM_FUNNEL as cfg } from "./config";
+import { IS_PREVIEW } from "./preview";
 import { fireFoundationApplication } from "./tracking";
 
 // Custom field IDs registered for the 5 application questions.
@@ -34,6 +35,16 @@ export function initFoundation() {
       if (note) {
         note.hidden = false;
         note.textContent = "Please add your name, email and phone so we can follow up.";
+      }
+      return;
+    }
+
+    if (IS_PREVIEW) {
+      // Static preview build: no application is sent and no call is booked.
+      if (note) {
+        note.hidden = false;
+        note.textContent =
+          "Preview build. The application form is not connected yet, so nothing was sent.";
       }
       return;
     }

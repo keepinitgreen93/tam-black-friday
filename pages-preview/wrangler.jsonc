@@ -1,0 +1,12 @@
+// Cloudflare Pages config for the static preview (project tam-bf-2026-preview).
+// Kept in this folder so it never affects the AI Studio build at the repo root.
+// No account_id here: Wrangler uses the logged-in account.
+{
+  "name": "tam-bf-2026-preview",
+  "pages_build_output_dir": "./site",
+  "compatibility_date": "2026-07-31",
+  // Private bucket for the funnel videos. Served only through functions/v/[file].js.
+  "r2_buckets": [
+    { "binding": "VIDEO", "bucket_name": "tam-bf-2026-video" }
+  ]
+}

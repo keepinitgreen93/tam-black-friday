@@ -7,6 +7,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 
 import { PaymentCheckoutBlock, isCheckoutReturn } from "../integrations/payments";
 import { resolveFunnelProducts, type FunnelProducts } from "./products";
+import { IS_PREVIEW } from "./preview";
 import { PaymentStyles, paymentTheme } from "./theme";
 import { fireBuyerTracking } from "./tracking";
 
@@ -17,6 +18,7 @@ export function Checkout() {
   const [isReturn] = useState(() => isCheckoutReturn());
 
   useEffect(() => {
+    if (IS_PREVIEW) return;
     let live = true;
     void resolveFunnelProducts().then((p) => {
       if (live) setProducts(p);
@@ -40,6 +42,9 @@ export function Checkout() {
     }
   }, [isReturn, mainPriceId]);
 
+  // Static preview build: show the order, never load the payment form.
+  if (IS_PREVIEW) return <CheckoutPreview />;
+
   if (isReturn) {
     return <CheckoutBlock />;
   }
@@ -58,16 +63,47 @@ export function Checkout() {
   return <CheckoutBlock />;
 }
 
+function OrderIntro() {
+  return (
+    <p className="checkout-intro">
+      <b>Hire Your AI Agent in 3 Days, Live.</b> Tuesday, December 8 to Thursday, December 10,
+      12:00 to 1:30 PM Eastern. You plus one teammate. Replays, Starter Skills,
+      Company Brain Kit (setup plus guide), Texting Ready Kit, 90 days of Product Champ,
+      90 days of a TAM hosted AI agent.
+    </p>
+  );
+}
+
+/** Static preview build: the order summary with the payment form left out. */
+function CheckoutPreview() {
+  return (
+    <div className="checkout-preview" data-checkout-preview>
+      <h2 className="display head center">
+        <span className="a">Your order</span>
+      </h2>
+      <OrderIntro />
+      <div className="price-box">
+        <p className="now">$97 one time</p>
+        <p className="was">Black Friday price. Ends Sunday, December 6 at 11:59 PM ET.</p>
+      </div>
+      <p className="notice" role="note">
+        <strong>Preview build.</strong> The order form is not connected on this preview page, so
+        no payment can be taken here.
+      </p>
+      <div className="cta-row">
+        <a className="no-link" href="/">
+          Back to the details
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function CheckoutBlock() {
   return (
     <div className="tam-checkout tam-checkout--form" style={paymentTheme}>
       <PaymentStyles />
-      <p className="checkout-intro">
-        <b>Hire Your AI Agent in 3 Days, Live.</b> Tuesday, December 8 to Thursday, December 10,
-        12:00 to 1:30 PM Eastern. You plus one teammate. Replays, Starter Skills,
-        Company Brain Kit (setup plus guide), Texting Ready Kit, 90 days of Product Champ,
-        90 days of a TAM hosted AI agent.
-      </p>
+      <OrderIntro />
       <PaymentCheckoutBlock
         layout="two-step"
         fields={{ phone: "required", address: "hidden" }}

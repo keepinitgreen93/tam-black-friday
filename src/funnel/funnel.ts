@@ -30,9 +30,57 @@ export function closeModal(modal: HTMLElement) {
   if (lastFocus instanceof HTMLElement) lastFocus.focus();
 }
 
+/** Asks the /v/ function whether a file is in the video bucket. Always a 200, so a
+    missing file never shows up as a console error. Anything unexpected reads as "no". */
+async function videoFileExists(src: string): Promise<boolean> {
+  try {
+    const res = await fetch(src + (src.includes("?") ? "&" : "?") + "probe=1", { cache: "no-store" });
+    if (!res.ok || !(res.headers.get("content-type") ?? "").includes("application/json")) return false;
+    const data: unknown = await res.json();
+    return typeof data === "object" && data !== null && (data as { exists?: unknown }).exists === true;
+  } catch {
+    return false;
+  }
+}
+
+/* Video slots: <div data-vsl hidden><template><video ...></template></div>.
+   The player lives in a <template> so the browser requests nothing until the file is
+   confirmed in the bucket. No file, a failed check, or a playback error: the slot stays
+   (or goes back to) hidden, so a broken player is never shown. */
+function initVsl(root: HTMLElement) {
+  root.querySelectorAll<HTMLElement>("[data-vsl]").forEach((slot) => {
+    const tpl = slot.querySelector("template");
+    const source = tpl?.content.querySelector("video");
+    const src = source?.getAttribute("src");
+    if (!tpl || !source || !src) return;
+    const row = slot.closest(".hero__act");
+    const hide = () => {
+      slot.hidden = true;
+      row?.classList.remove("has-vsl");
+      slot.querySelector("video")?.remove();
+    };
+    void (async () => {
+      if (!(await videoFileExists(src))) return;
+      const video = source.cloneNode(true) as HTMLVideoElement;
+      const poster = video.getAttribute("poster");
+      if (poster && !(await videoFileExists(poster))) video.removeAttribute("poster");
+      const track = video.querySelector("track");
+      const captions = track?.getAttribute("src");
+      if (track && captions && !(await videoFileExists(captions))) track.remove();
+      video.addEventListener("error", hide);
+      slot.appendChild(video);
+      video.load(); // a player copied out of a <template> does not always start loading by itself
+      slot.hidden = false;
+      row?.classList.add("has-vsl");
+    })();
+  });
+}
+
 export function initFunnel(root: HTMLElement) {
   if (root.dataset["funnelReady"]) return;
   root.dataset["funnelReady"] = "1";
+
+  initVsl(root);
 
   // Reveal on scroll. Content stays visible without JS, without IntersectionObserver,
   // or with reduced motion. Anything already on screen is marked revealed first so

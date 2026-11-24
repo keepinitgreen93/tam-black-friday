@@ -6,6 +6,16 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 
 import { initFunnel } from "./funnel";
+import { IS_PREVIEW, PREVIEW_FOOT_NOTE } from "./preview";
+
+/** Preview build only: says so in the footer of every page. */
+const withPreviewNote = (html: string) =>
+  IS_PREVIEW
+    ? html.replace(
+        /(\s*<\/div>\s*<\/footer>)/,
+        `\n    <p class="preview-note">${PREVIEW_FOOT_NOTE}</p>$1`,
+      )
+    : html;
 
 type FunnelPageProps = {
   /** Body markup from src/funnel/pages/*.html. */
@@ -29,7 +39,7 @@ export function FunnelPage({ html, onReady, children }: FunnelPageProps) {
 
   return (
     <>
-      <div ref={ref} style={{ display: "contents" }} dangerouslySetInnerHTML={{ __html: html }} />
+      <div ref={ref} style={{ display: "contents" }} dangerouslySetInnerHTML={{ __html: withPreviewNote(html) }} />
       {children}
     </>
   );

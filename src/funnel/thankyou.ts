@@ -1,6 +1,7 @@
 /* TAM Black Friday 2026 — /thank-you page.
    Loads the Product Champ booking calendar embed (the owner's own embed code) and
    handles the teammate form. */
+import { IS_PREVIEW } from "./preview";
 import { fireTeammateTracking } from "./tracking";
 
 const val = (root: ParentNode, sel: string) =>
@@ -31,6 +32,15 @@ export function initThankYou() {
       const note = teammateForm.querySelector<HTMLElement>("[data-teammate-status]");
       if (!teammateEmail) {
         teammateForm.querySelector<HTMLInputElement>("#t-email")?.focus();
+        return;
+      }
+      if (IS_PREVIEW) {
+        // Static preview build: the form is not connected, so say so instead of "Saved".
+        if (note) {
+          note.hidden = false;
+          note.textContent =
+            "Preview build. This form is not connected yet, so nothing was saved.";
+        }
         return;
       }
       fireTeammateTracking({ teammateName, teammateEmail });

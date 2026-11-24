@@ -19,6 +19,8 @@ src/tailwind.config.vibe.json
 
 # Wrangler / Cloudflare
 .wrangler/
+pages-preview/site/
+pages-preview/.wrangler/
 .dev.vars
 
 # Editor directories and files

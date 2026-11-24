@@ -26,6 +26,15 @@
 <section class="band band--light">
   <div class="wrap read">
 
+    <!-- Welcome video slot. Stays hidden until /v/bf-welcome-next-steps_web.mp4 exists. -->
+    <div class="vsl vsl--light" data-vsl hidden>
+      <template>
+        <video controls playsinline preload="metadata" poster="/v/bf-welcome-next-steps_poster.jpg" src="/v/bf-welcome-next-steps_web.mp4" width="1280" height="720" aria-label="Watch: welcome, and your next steps">
+          <track kind="captions" src="/v/bf-welcome-next-steps_captions.vtt" srclang="en" label="English">
+        </video>
+      </template>
+    </div>
+
     <!-- STEP 1 -->
     <article class="step" id="step-book">
       <p class="step__bar"><span class="stack__n" aria-hidden="true">1</span>STEP 1: Book your AI Growth Foundation call</p>
