@@ -438,3 +438,194 @@ strong, b { font-weight: 700; }
   .ribbon__track { animation: none; }
   .js .rv { opacity: 1; translate: 0 0; transition: none; }
 }
+
+/* =========================================================
+   Sales page v2: pain point callouts, offer stack with mockups.
+   Same rules as above: 4px sheets, 6px controls, rules over boxes,
+   no pills, no glows, no gradients used as decoration.
+   ========================================================= */
+
+.display--long { font-size: clamp(1.75rem, 1.15rem + 2.7vw, 3.1rem); line-height: 1.03; }
+.band .display.control { margin: 38px 0 0; text-align: center; color: var(--indigo-600); font-size: clamp(2rem, 1.3rem + 3vw, 3.3rem); }
+
+/* ---------- 2. Pain callouts: six different treatments ---------- */
+.pain { display: grid; gap: 22px; margin: 40px 0 0; }
+.pain h3.display { margin-bottom: 0.5em; }
+.pain p { max-width: 62ch; }
+.pain .pain__a h3.display, .pain .pain__d h3.display { margin-bottom: 0; }
+.pain__a { background: var(--white); color: var(--ink); border-radius: var(--r-card); padding: 28px 22px 32px; display: flex; flex-direction: column; justify-content: space-between; gap: 26px; }
+.pain__a h3 { margin-bottom: 0; }
+.pain__a h3 { font-size: clamp(2rem, 1.35rem + 3.2vw, 4rem); line-height: 1; color: var(--ink); }
+.pain__a p { color: var(--slate); }
+.pain__b { border: 1px solid var(--rule-dark); border-top: 4px solid var(--coral); border-radius: var(--r-card); padding: 22px 22px 26px; }
+.pain__b h3 { font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.3rem); color: var(--white); }
+.pain__c { border-top: 1px solid var(--rule-dark); padding-top: 20px; }
+.pain__c h3 { font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.3rem); color: var(--indigo-200); }
+.pain__d { background: var(--indigo-700); border-radius: var(--r-card); padding: 30px 22px 34px; }
+.pain__d h3 { font-size: clamp(2.2rem, 1.4rem + 3.6vw, 4rem); line-height: 0.98; color: var(--white); }
+.pain__d p { color: var(--white); }
+.pain__e { border-top: 1px solid var(--rule-dark); padding: 22px 0 26px; }
+.pain__e h3 { font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.3rem); color: var(--coral-soft); }
+.pain__f { border: 2px dashed var(--on-dark-muted); border-radius: var(--r-card); padding: 22px 22px 26px; }
+.pain__f h3 { font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.3rem); color: var(--white); }
+
+/* ---------- 3. Old way / new way ---------- */
+.split--story { margin-bottom: 56px; }
+.oldnew { display: grid; gap: 20px; }
+.oldnew h3 { margin-bottom: 14px; }
+.oldnew__old { background: var(--night); color: var(--on-dark); border-radius: var(--r-card); padding: 26px 22px 28px; --focus: #FFFFFF; }
+.oldnew__old h3 { color: var(--white); }
+.oldnew__old .ticks--x li::before { background: var(--coral); }
+.oldnew__new { background: var(--white); color: var(--ink); border: 1px solid var(--line); border-top: 4px solid var(--indigo-600); border-radius: var(--r-card); padding: 26px 22px 28px; }
+.oldnew__new h3 { color: var(--indigo-800); }
+
+/* ---------- 4. Same AI for everyone ---------- */
+.frame--brain { margin-top: 40px; }
+
+/* ---------- 5. Six things ---------- */
+.six { list-style: none; counter-reset: six; display: grid; margin: 40px 0 0; border-top: 1px solid var(--rule-dark); }
+.six li { counter-increment: six; position: relative; padding: 24px 0 24px 66px; border-bottom: 1px solid var(--rule-dark); color: var(--on-dark); }
+.six li::before { content: counter(six); position: absolute; left: 0; top: 18px; font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 3.2rem; line-height: 1; color: var(--coral); }
+.six b { display: block; font-family: var(--font-ui); font-weight: 800; font-size: 1.22rem; line-height: 1.3; color: var(--white); margin-bottom: 4px; }
+.six__note { margin: 28px auto 0; max-width: 700px; text-align: center; font-family: var(--font-ui); font-weight: 700; color: var(--white); }
+
+/* ---------- 6. Three days ---------- */
+.split--days { margin-bottom: 46px; }
+.days { display: grid; border-top: 3px solid var(--ink); }
+.day { display: grid; gap: 14px; padding: 28px 0 32px; border-bottom: 1px solid #C9CEDD; }
+.day__n { font-size: clamp(2.6rem, 1.8rem + 3.4vw, 4rem); color: var(--indigo-600); line-height: 0.95; margin: 0; }
+.day__when { margin: 8px 0 0; font-family: var(--font-ui); font-weight: 700; font-size: 0.95rem; line-height: 1.45; color: var(--slate); }
+.day__main h3 { margin-bottom: 14px; color: var(--ink); }
+.day__out { display: grid; gap: 14px; margin: 22px 0 0; padding-top: 18px; border-top: 1px solid #C9CEDD; }
+.day__out dt { font-family: var(--font-ui); font-weight: 800; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--indigo-700); margin-bottom: 3px; }
+.day__out dd { margin: 0; color: var(--ink); }
+.day__note { margin-top: 16px; color: var(--slate); }
+.band--light .replays { margin-top: 30px; text-align: center; border-top: 0; padding-top: 0; }
+
+/* ---------- 7. Offer stack ---------- */
+.stack-intro { text-align: center; max-width: 900px; margin: 0 auto; }
+.stack-intro .display .a { color: var(--coral-soft); }
+.stack-intro .display .b { color: var(--white); }
+.stack-intro .lede { margin-top: 20px; color: var(--white); font-weight: 600; }
+.bundle { margin: 36px auto 40px; border-radius: var(--r-card); overflow: hidden; border: 1px solid rgba(227, 231, 244, 0.3); background: var(--midnight); }
+.bundle img { width: 100%; height: auto; }
+.items { display: grid; gap: 22px; }
+.item { background: var(--night); color: var(--on-dark); border: 1px solid rgba(227, 231, 244, 0.22); border-radius: var(--r-card); overflow: hidden; --focus: #FFFFFF; }
+.item__img { margin: 0; background: #040614; }
+.item__img img { width: 100%; height: auto; }
+.item__body { padding: 22px 20px 26px; }
+.item__body p { margin-bottom: 0.8em; }
+.item__body p:last-child { margin-bottom: 0; }
+.item__body b { color: var(--white); }
+.item__head { display: grid; gap: 8px; margin-bottom: 14px; }
+.item__name { font-family: var(--font-ui); font-weight: 800; letter-spacing: -0.015em; line-height: 1.2; color: var(--white); font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.65rem); }
+.item__n { display: inline-block; margin-right: 12px; font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 1.5em; line-height: 1; color: var(--coral); vertical-align: -0.08em; }
+.item__value { margin: 0; font-family: var(--font-ui); font-weight: 700; text-align: right; line-height: 1.2; color: var(--on-dark-muted); }
+.item__value span { font-size: 0.86rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.item__value b { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 2.1rem; letter-spacing: 0.01em; color: var(--coral); vertical-align: -0.06em; margin-left: 4px; }
+.item__basis { grid-column: 1 / -1; margin: 0 !important; text-align: right; font-size: 0.92rem; line-height: 1.35; color: var(--on-dark); }
+.item__fix { font-family: var(--font-ui); font-weight: 700; color: var(--indigo-200); }
+.item .fine { color: var(--on-dark-muted); }
+.item a { color: var(--white); text-underline-offset: 3px; }
+.wf { list-style: none; display: grid; margin: 4px 0 14px; border-top: 1px solid var(--rule-dark); }
+.wf li { padding: 10px 0; border-bottom: 1px solid var(--rule-dark); }
+.item__more { padding: 0 20px 28px; }
+.item__morehead { font-family: var(--font-ui); font-weight: 800; font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--coral-soft); margin: 0 0 10px; padding-top: 18px; border-top: 1px solid var(--rule-dark); }
+.nine { list-style: none; counter-reset: n9; display: grid; }
+.nine li { counter-increment: n9; position: relative; padding: 12px 0 12px 40px; border-bottom: 1px solid var(--rule-dark); font-size: 0.98rem; line-height: 1.5; }
+.nine li::before { content: counter(n9); position: absolute; left: 0; top: 8px; font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 1.7rem; line-height: 1; color: var(--coral); }
+.cta-row--tight { margin: 10px 0 10px; }
+
+/* ---------- 8. Bonus: its own card ---------- */
+.bonus { background: var(--white); color: var(--ink); border-radius: var(--r-card); overflow: hidden; border: 4px solid var(--coral); --focus: var(--indigo-700); }
+.bonus__bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--coral); color: var(--night); padding: 10px 20px; }
+.bonus__label { margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 800; text-transform: uppercase; font-size: 2.1rem; line-height: 1; letter-spacing: 0.04em; }
+.bonus__value { margin: 0; font-family: var(--font-ui); font-weight: 800; text-align: right; line-height: 1; }
+.bonus__value span { font-size: 0.86rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.bonus__value b { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: 2.3rem; margin-left: 6px; vertical-align: -0.05em; }
+.bonus__grid { display: grid; gap: 28px; padding: 28px 20px 32px; }
+.bonus .display--long { font-size: clamp(1.55rem, 1.1rem + 1.9vw, 2.4rem); margin-bottom: 18px; }
+.bonus .display .a { color: var(--indigo-600); }
+.bonus .display .b { color: var(--ink); }
+.bonus__fix { color: var(--indigo-700); }
+.bonus .fine { color: var(--slate); font-size: 0.97rem; }
+.bonus__media { display: grid; gap: 28px; align-content: start; }
+.bonus__img { margin: 0; border-radius: var(--r-card); overflow: hidden; background: var(--midnight); }
+.bonus__img img { width: 100%; height: auto; }
+.bonus .snap { width: 92%; margin: 0 auto; border: 1px solid var(--line); box-shadow: 0 12px 26px rgba(23, 21, 59, 0.18); }
+
+/* ---------- 9. Price reveal ---------- */
+.recapcard { margin: 34px auto 0; max-width: 860px; }
+.recap { list-style: none; border-top: 2px solid var(--ink); }
+.recap li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.recap li span { color: var(--ink); }
+.recap li b { flex: none; font-family: var(--font-ui); font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; color: var(--indigo-800); }
+.recap__bonus { background: var(--indigo-50); margin: 0 -10px; padding-left: 10px !important; padding-right: 10px !important; }
+.recap__bonus span { font-weight: 700; }
+.recap__bonus b { font-size: 1.1em; }
+.recap__total { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 0; padding: 18px 0 0; border-top: 0; }
+.recap__total span { font-family: var(--font-display); font-style: italic; font-weight: 800; text-transform: uppercase; font-size: 1.9rem; line-height: 1; color: var(--ink); }
+.recap__total b { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: clamp(2.6rem, 2rem + 2.6vw, 3.6rem); line-height: 1; color: var(--indigo-600); font-variant-numeric: tabular-nums; }
+.yours { margin: 34px 0 0; padding: 40px 18px 42px; text-align: center; background-color: var(--night); background-image: var(--grain-light); color: var(--on-dark); border-radius: var(--r-card); }
+.yours p { margin: 0; }
+.yours__label { font-family: var(--font-ui); font-weight: 800; font-size: 1.05rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--coral-soft); }
+.yours__price { margin: 10px 0 8px; color: var(--white); font-size: clamp(2.6rem, 1.4rem + 6vw, 5.6rem); line-height: 0.95; }
+.yours__price em { font-style: italic; color: var(--coral); }
+.yours__sub { margin-top: 14px !important; font-family: var(--font-ui); font-weight: 800; font-size: 1.2rem; color: var(--white); }
+.yours__text { display: grid; align-content: center; }
+.yours__img { margin: 28px 0 0; border-radius: var(--r-card); overflow: hidden; }
+.yours__img img { width: 100%; height: auto; }
+.yours__end { margin-top: 10px; color: var(--on-dark); }
+.price-why { margin-top: 34px; text-align: center; }
+.price-why h3 { margin-bottom: 8px; color: var(--ink); }
+.terms3 { display: grid; gap: 22px; margin: 52px auto 0; max-width: 860px; }
+.terms3 h3 { margin-bottom: 12px; }
+.terms3 .math { margin-top: 14px; }
+.terms3 .math li { padding-right: 4px; }
+.terms3 .day90 { margin-top: 0; }
+
+/* ---------- 10. Stories link line ---------- */
+.story-link { margin: 22px auto 0; max-width: 780px; text-align: center; font-family: var(--font-ui); font-weight: 800; color: var(--white); }
+
+/* ---------- 13. Plain terms card with teammate photo ---------- */
+.terms { display: grid; gap: 28px; align-items: center; }
+.terms .snap { width: 92%; max-width: 440px; margin: 0 auto; border: 1px solid var(--line); box-shadow: 0 12px 26px rgba(23, 21, 59, 0.18); }
+.terms h3 { margin-bottom: 14px; }
+
+@media (min-width: 600px) {
+  .pain__a { padding: 36px 34px 40px; }
+  .pain__d { padding: 38px 38px 42px; }
+  .item__head { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 6px 24px; }
+  .oldnew__old, .oldnew__new { padding: 30px 30px 32px; }
+}
+
+@media (min-width: 860px) {
+  .pain { grid-template-columns: repeat(12, 1fr); gap: 28px; align-items: stretch; }
+  .pain__a { grid-column: 1 / 7; grid-row: 1 / 3; }
+  .pain__b { grid-column: 7 / 13; grid-row: 1; }
+  .pain__c { grid-column: 7 / 13; grid-row: 2; }
+  .pain__d { grid-column: 1 / 13; display: grid; grid-template-columns: 1.15fr 0.85fr; column-gap: 56px; align-items: center; }
+  .pain__d h3 { margin-bottom: 0; }
+  .pain__e { grid-column: 1 / 7; }
+  .pain__f { grid-column: 7 / 13; }
+  .split--story { grid-template-columns: 1.1fr 0.9fr; }
+  .oldnew { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .six { grid-template-columns: 1fr 1fr; column-gap: 64px; }
+  .split--days { grid-template-columns: 1.1fr 0.9fr; }
+  .day { grid-template-columns: 250px 1fr; gap: 48px; padding: 38px 0 42px; }
+  .day__out { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .item { display: grid; grid-template-columns: 1.02fr 0.98fr; align-items: center; }
+  .item__body { padding: 30px 40px 32px 34px; }
+  .item__more { grid-column: 1 / -1; padding: 0 40px 36px; }
+  .nine { grid-template-columns: 1fr 1fr; column-gap: 44px; }
+  .bundle { margin: 44px auto 52px; }
+  .bonus__bar { padding: 12px 36px; }
+  .bonus__grid { grid-template-columns: 1.1fr 0.9fr; gap: 52px; padding: 44px 44px 48px; align-items: center; }
+  .yours { padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  .yours__img { margin: 0; }
+  .terms { grid-template-columns: 1.25fr 0.75fr; gap: 52px; }
+}
+
+main p, main li { text-wrap: pretty; }
+
+.item__head p { margin: 0 !important; }
