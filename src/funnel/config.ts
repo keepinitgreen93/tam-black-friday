@@ -18,14 +18,14 @@
 // Option 2: paste IDs here (More → Payments → product → copy ID).
 const IDS = {
   // Main offer: "Hire Your AI Agent in 3 Days, Live" — $97 one time.
-  MAIN_PRODUCT_ID: "",
-  MAIN_PRICE_ID: "",
+  MAIN_PRODUCT_ID: "6afdd860c4fb2d0206de6150",
+  MAIN_PRICE_ID: "6b04af7f7fad07d6e6a60fe4",
   // One-click upsell: "2027 Growth Accelerator" — $997 one time.
-  UPSELL_PRODUCT_ID: "",
-  UPSELL_PRICE_ID: "",
+  UPSELL_PRODUCT_ID: "6b04af7fd86ba9a7bf202974",
+  UPSELL_PRICE_ID: "6b04af7f821bd6411d26f139",
   // Payment plan upsell: "2027 Growth Accelerator" — 6 monthly payments of $197.
-  PLAN_PRODUCT_ID: "",
-  PLAN_PRICE_ID: "",
+  PLAN_PRODUCT_ID: "6b04af8c9c22a0569a7ea9dd",
+  PLAN_PRICE_ID: "6b04af8cde0cc9b42d49a3bf",
 };
 
 const pick = (envValue: unknown, fallback: string): string =>
