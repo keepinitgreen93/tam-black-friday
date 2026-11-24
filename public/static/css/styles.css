@@ -305,6 +305,8 @@ strong, b { font-weight: 700; }
 .grid2 { display: grid; gap: 0 14px; }
 .check { display: grid; grid-template-columns: 24px 1fr; gap: 12px; align-items: start; font-size: 0.95rem; line-height: 1.5; margin: 14px 0; }
 .check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--indigo-700); }
+.checkout-intro { margin: 0 0 20px; font-size: 0.98rem; line-height: 1.55; color: var(--slate); }
+.checkout-intro b { font-family: var(--font-ui); font-weight: 800; color: var(--ink); }
 .summary { border-top: 2px solid var(--ink); padding: 18px 0 0; margin-bottom: 8px; }
 .summary b { font-family: var(--font-ui); font-weight: 800; }
 .summary .row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; }
@@ -344,6 +346,9 @@ strong, b { font-weight: 700; }
 .cal-btns { display: grid; gap: 10px; margin: 18px 0; }
 .steps-ol { margin: 14px 0 22px 1.3em; display: grid; gap: 10px; }
 .booker { border: 1px solid var(--line); border-radius: var(--r-card); padding: 16px; margin: 16px 0; background: var(--ghost); }
+.booker--embed { padding: 0; margin: 16px 0; border: 0; border-radius: 0; background: transparent; }
+.booker--embed iframe { display: block; width: 100%; min-height: 520px; border: 0; }
+.booker--embed br { display: none; }
 .booker__label { font-family: var(--font-ui); font-weight: 800; margin: 4px 0 10px; }
 .chips { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
 .chips button { min-height: 48px; padding: 8px 6px; border-radius: var(--r-input); border: 1px solid #8E97B0; background: var(--white); color: var(--ink); font: inherit; font-weight: 600; font-size: 0.95rem; cursor: pointer; }

@@ -4,7 +4,7 @@
    one-click block. Every accept and the final decline continue to /foundation.
 
    Both blocks share the one-time upsell token from checkout. The token is spent as
-   soon as either block accepts or declines, so the $997 "No thanks" is caught here
+   soon as either block accepts or declines, so the $997 "No thanks" (restyled as a small text link) is caught here
    and turned into "open the plan popup" instead of a decline. If that ever stops
    matching, the buyer simply continues to /foundation. */
 import { useEffect, useState } from "react";
@@ -66,7 +66,7 @@ export function Upsell() {
       <PaymentStyles />
       <MountInto id="upsell-mount">
         {products.upsell ? (
-          <div className="tam-checkout" style={paymentTheme}>
+          <div className="tam-checkout tam-checkout--offer tam-checkout--hero" style={paymentTheme}>
             <PaymentUpsellBlock
               productId={products.upsell.productId}
               priceId={products.upsell.priceId}
@@ -79,7 +79,7 @@ export function Upsell() {
       </MountInto>
       <MountInto id="plan-upsell-mount">
         {products.plan ? (
-          <div className="tam-checkout" style={paymentTheme}>
+          <div className="tam-checkout tam-checkout--offer tam-checkout--plan" style={paymentTheme}>
             <PaymentUpsellBlock
               productId={products.plan.productId}
               priceId={products.plan.priceId}

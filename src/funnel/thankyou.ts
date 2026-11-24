@@ -1,27 +1,25 @@
 /* TAM Black Friday 2026 — /thank-you page.
-   Wires the booking calendar to real availability, handles the teammate form. */
-import { wireCalendar } from "./calendar";
-import { TAM_FUNNEL as cfg } from "./config";
+   Loads the Product Champ booking calendar embed (the owner's own embed code) and
+   handles the teammate form. */
 import { fireTeammateTracking } from "./tracking";
 
 const val = (root: ParentNode, sel: string) =>
   root.querySelector<HTMLInputElement>(sel)?.value?.trim() || "";
 
+const EMBED_SCRIPT = "https://link.productchamp.io/js/form_embed.js";
+
+/** A raw <script> inside server-rendered HTML never runs, so the embed script is added here, once. */
+function loadCalendarEmbed() {
+  if (document.querySelector(`script[src="${EMBED_SCRIPT}"]`)) return;
+  const script = document.createElement("script");
+  script.src = EMBED_SCRIPT;
+  script.type = "text/javascript";
+  script.async = true;
+  document.body.appendChild(script);
+}
+
 export function initThankYou() {
-  const booker = document.getElementById("booker");
-  if (booker) {
-    void wireCalendar({
-      container: booker,
-      calendarId: cfg.CALENDAR_ID,
-      locationId: cfg.LOCATION_ID,
-      getContact: () => ({
-        firstName: val(booker, "#b-first"),
-        lastName: val(booker, "#b-last"),
-        email: val(booker, "#b-email"),
-        phone: val(booker, "#b-phone"),
-      }),
-    });
-  }
+  loadCalendarEmbed();
 
   // Teammate form — fire a tracking event so the teammate info is captured.
   const teammateForm = document.getElementById("teammate-form") as HTMLFormElement | null;
