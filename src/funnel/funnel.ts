@@ -51,21 +51,23 @@ async function probeVideoFile(src: string): Promise<"yes" | "no" | "unknown"> {
   }
 }
 
-/* Video slots: <div data-vsl hidden><template><video ...></template></div>.
+/* Video sections: <section data-vsec hidden> holds an eyebrow, a <div data-vsl hidden> slot with
+   <template><video ...></template>, and the button under the player.
    The video lives in a <template> so the browser requests nothing until the bucket confirms
-   the file. Then the shared branded player (player.ts) takes over the slot. The slot stays
-   hidden only when the file is confirmed missing. A playback problem shows an error panel
-   with a retry button inside the player; it never hides the player. */
+   the file. Then the shared branded player (player.ts) takes over the slot and the whole
+   section is shown. The section (button included) stays hidden only when the file is confirmed
+   missing. A playback problem shows an error panel with a retry button inside the player; it
+   never hides the player. */
 function initVsl(root: HTMLElement) {
   root.querySelectorAll<HTMLElement>("[data-vsl]").forEach((slot) => {
     const tpl = slot.querySelector("template");
     const source = tpl?.content.querySelector("video");
     const src = source?.getAttribute("src");
     if (!tpl || !source || !src) return;
-    const row = slot.closest(".hero__act");
+    const section = slot.closest<HTMLElement>("[data-vsec]");
     const hide = () => {
       slot.hidden = true;
-      row?.classList.remove("has-vsl");
+      if (section) section.hidden = true;
       slot.replaceChildren(tpl);
     };
     void (async () => {
@@ -78,7 +80,7 @@ function initVsl(root: HTMLElement) {
       if (track && captions && (await probeVideoFile(captions)) === "no") track.remove();
       mountPlayer(slot, video, { onMissing: hide, probe: probeVideoFile });
       slot.hidden = false;
-      row?.classList.add("has-vsl");
+      if (section) section.hidden = false;
     })();
   });
 }
