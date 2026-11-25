@@ -129,6 +129,16 @@ VSL", `files.leadconnectorhq.com`), so every host plays the same files. The medi
 Cloudflare function below, which sends CORS headers. The slot is hidden only if the file answers
 404; any other load error shows the player's error panel with a retry button.
 
+Layout (VSL pattern): the video sits at the top of the hero on every page, right under the headline and
+sub line, with the page's button directly under it (sales: checkout, upsell page: `#upsell-mount`, thank-you:
+`#booker`). It autoplays muted behind a "Click to watch with sound" overlay; a click turns the sound on from
+0:00. With `prefers-reduced-motion`, or if the browser blocks autoplay, the poster and play button show instead.
+When the player scrolls out of view while playing, the same player element floats as a mini player in the
+bottom corner (CSS `position: fixed`, no DOM move, so playback never restarts); the slot keeps its 16:9 box as
+a placeholder. Mini buttons: play/pause, sound, expand (scrolls back to the top), close (pauses; it returns
+when the visitor scrolls back up). All of it lives in `src/funnel/player.ts` and the `.bfp*` / `.hero--vsl`
+rules in `public/static/css/styles.css`.
+
 | Page | Video | Poster | Captions |
 |---|---|---|---|
 | `/` and `/install` | `bf-vsl_web.mp4` | `bf-vsl_poster.jpg` | `bf-vsl_captions.vtt` |

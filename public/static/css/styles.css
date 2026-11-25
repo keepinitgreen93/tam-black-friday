@@ -630,16 +630,36 @@ main p, main li { text-wrap: pretty; }
 
 .item__head p { margin: 0 !important; }
 
-/* ---------- Video section (.vsec): its own band right after the hero, one centered column: eyebrow, player, button.
-   Slots are hidden until the file exists in R2; see initVsl in src/funnel/funnel.ts ---------- */
-.vsec { text-align: center; }
-.vsec .hero__flag { margin: 0 0 28px; }
-.vsec .btn { text-wrap: balance; }
-.vsec .vsl { max-width: 1040px; }
-.vsec .cta-row { margin-top: 32px; }
+/* ---------- VSL hero (.hero--vsl): flag, headline, one-line sub, THEN the video, the button right under it, and the
+   rest of the hero (price, day tickets, photo). One centered column. The video box is sized from the viewport
+   height too, so the headline and the whole player fit in the first screen on a 1440x900 laptop. ---------- */
+/* --vsl-off: height of everything above the video plus a 24px margin, so the player ends just above the fold and
+   the button under it starts below it (no clipped sliver). Sales page by default; the step pages are shorter,
+   and the upsell page has the top bar and a longer headline. */
+.hero--vsl { padding-bottom: 52px; --vsl-off: 376px; }
+.hero--vsl.hero--step { --vsl-off: 340px; }
+.topbar ~ main .hero--vsl.hero--step { --vsl-off: 420px; }
+.hero--vsl .site-head { padding: 14px 0 0; }
+.hero--vsl .site-head img { height: 42px; }
+.hero--vsl .hero__flag { margin-top: 12px; }
+.hero--vsl h1 { margin-top: 14px; }
+.hero--vsl h1.display { font-size: clamp(1.9rem, 1.2rem + 3vw, 3rem); }
+.hero--vsl h1.display.hero__h1 { font-size: clamp(1.4rem, 0.9rem + 2.2vw, 2.2rem); max-width: 28em; }
+.hero--vsl .hero__sub { margin-top: 12px; max-width: 760px; font-size: 0.94rem; line-height: 1.45; }
+.hero--vsl .ty-head { padding: 12px 0 0; }
+.hero--vsl .ty-head p { margin-top: 12px; font-size: 1rem; line-height: 1.5; }
+.hero--vsl .progress { padding-top: 10px; }
+.hero--vsl .vsl { max-width: 100%; margin-top: 20px; }
+.hero--vsl .cta-row { margin-top: 22px; }
+.hero--vsl .btn { text-wrap: balance; }
+.hero--vsl .hero__price { margin-top: 22px; }
+.hero--vsl .tickets { margin-top: 30px; }
+.hero--vsl .frame { margin-top: 30px; }
 /* ---------- Video slots (data-vsl). Hidden until the file exists in R2; see initVsl in src/funnel/funnel.ts ---------- */
 .vsl { position: relative; width: 100%; max-width: 760px; margin: 0 auto; aspect-ratio: 16 / 9; border-radius: var(--r-card); overflow: hidden; border: 1px solid rgba(227, 231, 244, 0.3); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45); background: var(--midnight); }
 .vsl[hidden] { display: none; }
+/* While the player floats as the mini player, the slot stays as a same-size placeholder: dimmed poster, no shift. */
+.vsl[data-docked="1"] { background: linear-gradient(rgba(6, 9, 20, 0.78), rgba(6, 9, 20, 0.78)), var(--vsl-poster, none) center / cover no-repeat, var(--midnight); }
 
 /* ---------- Branded video player (.bfp). Built by src/funnel/player.ts, one component for every video slot.
    Same tokens as the page: coral action colour on night, Manrope 800 UI type, 6px controls, flat fills, no glows.
@@ -759,4 +779,96 @@ main p, main li { text-wrap: pretty; }
   .bfp__playbtn { width: 56px; height: 56px; }
   .bfp__ic--big { width: 24px; height: 24px; }
   .bfp__label { font-size: 0.8rem; padding: 8px 12px 6px; }
+}
+
+/* ---------- Autoplay with the sound overlay ("Click to watch with sound") ----------
+   The video plays muted on its own; this layer covers the picture and one click turns the sound on from 0:00.
+   A thin real progress line runs along the bottom edge while the sound is off. */
+.bfp__sound { position: absolute; inset: 0; z-index: 2; display: none; align-items: center; justify-content: center; margin: 0; padding: 0; border: 0; color: var(--white); font: inherit; background: rgba(6, 9, 20, 0.3); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 180ms ease; }
+.bfp__sound:hover { background: rgba(6, 9, 20, 0.18); }
+.bfp__sound:focus-visible { outline: 3px solid var(--bfp-focus); outline-offset: -3px; border-radius: 0; }
+.bfp[data-snd="off"] .bfp__sound { display: flex; }
+.bfp[data-snd="off"] .bfp__surface, .bfp[data-snd="off"] .bfp__bar, .bfp[data-snd="off"] .bfp__big { display: none; }
+.bfp[data-state="error"] .bfp__sound { display: none; }
+.bfp[data-auto="1"] .bfp__big { display: none; }
+.bfp__soundcard { display: flex; flex-direction: row; align-items: stretch; max-width: calc(100% - 24px); border-radius: var(--r-card); border-bottom: 3px solid var(--coral); overflow: hidden; background: rgba(6, 9, 20, 0.9); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55); text-align: left; transition: transform 140ms ease, box-shadow 160ms ease; }
+.bfp__sound:hover .bfp__soundcard { transform: translateY(-1px); box-shadow: 0 22px 50px rgba(0, 0, 0, 0.6); }
+.bfp__sound:active .bfp__soundcard { transform: translateY(1px); }
+.bfp__soundtile { position: relative; flex: none; display: grid; place-items: center; width: 92px; background: var(--coral); color: var(--night); transition: background-color 160ms ease; }
+.bfp__sound:hover .bfp__soundtile { background: #FF8E7C; }
+.bfp__soundtile::after { content: ""; position: absolute; inset: 0; border: 3px solid var(--night); opacity: 0; pointer-events: none; animation: bfp-ring 2.4s ease-out infinite; }
+.bfp__ic--snd { width: 42px; height: 42px; stroke-width: 2.2; }
+.bfp__soundtxt { display: flex; align-items: center; padding: 26px 30px 24px 26px; font-family: var(--font-ui); font-weight: 800; font-size: 1.1rem; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.3; color: var(--white); }
+.bfp__mprog { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(227, 231, 244, 0.28); pointer-events: none; }
+.bfp__mprog > span { display: block; height: 100%; width: 0; background: var(--coral); }
+@container bfp (max-width: 459px) {
+  .bfp__soundtile { width: 58px; }
+  .bfp__ic--snd { width: 28px; height: 28px; }
+  .bfp__soundtxt { padding: 11px 16px 10px 14px; font-size: 0.74rem; letter-spacing: 0.1em; }
+}
+
+/* ---------- Sticky mini player ----------
+   When the main player scrolls out of view while the video plays, the SAME player root (and its <video>) becomes
+   position: fixed in a bottom corner. Nothing is moved in the DOM, so playback never restarts. The slot (.vsl)
+   keeps its 16:9 box as the placeholder. Fade and scale only (compositor friendly). */
+:root { --mini-w: clamp(204px, 60vw, 300px); --mini-gap: 12px; }
+@media (min-width: 860px) { :root { --mini-w: 368px; --mini-gap: 22px; } }
+html.vsl-mini .hero { z-index: 40; } /* the fixed player lives in the hero: lift its stacking context above later sections, below the modal (50) */
+.bfp__mini { display: none; }
+.bfp[data-dock="mini"], .bfp[data-dock="closed"] { position: fixed; inset: auto max(var(--mini-gap), env(safe-area-inset-right)) max(var(--mini-gap), env(safe-area-inset-bottom)) auto; width: var(--mini-w); height: auto; aspect-ratio: 16 / 9; z-index: 80; border-radius: var(--r-btn); border: 1px solid rgba(227, 231, 244, 0.3); box-shadow: 0 20px 44px rgba(0, 0, 0, 0.55), 0 2px 10px rgba(0, 0, 0, 0.5); transform-origin: 100% 100%; }
+.bfp[data-dock="closed"] { visibility: hidden; pointer-events: none; }
+.bfp[data-dock="mini"][data-fx="in"] { animation: bfp-dock-in 200ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.bfp[data-dock="main"][data-fx="back"] { animation: bfp-dock-back 200ms ease-out both; }
+@keyframes bfp-dock-in { from { opacity: 0; transform: translate3d(0, 14px, 0) scale(0.94); } to { opacity: 1; transform: none; } }
+@keyframes bfp-dock-back { from { opacity: 0.35; transform: scale(0.985); } to { opacity: 1; transform: none; } }
+.bfp[data-dock="mini"] .bfp__bar, .bfp[data-dock="mini"] .bfp__sound, .bfp[data-dock="mini"] .bfp__big, .bfp[data-dock="mini"] .bfp__note { display: none; }
+.bfp[data-dock="mini"] .bfp__surface { padding: 0; }
+.bfp[data-dock="mini"] .bfp__mini { display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(180deg, rgba(6, 9, 20, 0.6) 0%, rgba(6, 9, 20, 0) 34%, rgba(6, 9, 20, 0) 62%, rgba(6, 9, 20, 0.7) 100%); }
+.bfp__mtop { position: absolute; top: 6px; right: 6px; display: flex; gap: 10px; }
+.bfp__mbot { position: absolute; left: 6px; bottom: 9px; display: flex; align-items: center; gap: 8px; }
+.bfp__mbtn, .bfp__msnd { pointer-events: auto; display: grid; place-items: center; min-width: 40px; height: 40px; margin: 0; padding: 0 8px; border: 0; border-radius: var(--r-btn); background: rgba(6, 9, 20, 0.84); color: var(--white); font: 800 0.8rem/1 var(--font-ui); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 140ms ease; }
+.bfp__mbtn:hover, .bfp__msnd:hover { background: rgba(6, 9, 20, 0.96); }
+/* The buttons rest while the video plays (same 1.5s-style auto-hide as the main player); the sound chip stays while muted. */
+.bfp__mini, .bfp__mbtn { transition: opacity 180ms ease, background-color 140ms ease; }
+.bfp[data-dock="mini"][data-controls="hide"] .bfp__mini { background: none; }
+.bfp[data-dock="mini"][data-controls="hide"] .bfp__mbtn { opacity: 0; pointer-events: none; }
+.bfp[data-dock="mini"][data-controls="hide"][data-muted="0"] .bfp__msnd { opacity: 0; pointer-events: none; }
+.bfp__mbtn:focus-visible, .bfp__msnd:focus-visible { outline: 3px solid var(--bfp-focus); outline-offset: 2px; }
+.bfp__mbtn .bfp__ic, .bfp__msnd .bfp__ic { width: 20px; height: 20px; }
+.bfp__msnd { display: flex; align-items: center; gap: 7px; }
+.bfp[data-muted="1"] .bfp__msnd { background: var(--coral); color: var(--night); }
+.bfp[data-muted="1"] .bfp__msnd:hover { background: #FF8E7C; }
+.bfp__msndtxt { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.02em; white-space: nowrap; }
+.bfp__mline { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(227, 231, 244, 0.3); pointer-events: none; }
+.bfp__mline > span { display: block; height: 100%; width: 0; background: var(--coral); }
+.bfp[data-dock="mini"] .bfp__errtxt { font-size: 0.78rem; line-height: 1.35; }
+.bfp[data-dock="mini"] .bfp__retry { min-height: 40px; padding: 8px 18px; font-size: 0.9rem; }
+.bfp[data-dock="mini"] .bfp__error { gap: 10px; padding: 12px; }
+@container bfp (max-width: 259px) {
+  .bfp__mbtn, .bfp__msnd { min-width: 40px; height: 40px; padding: 0 8px; }
+  .bfp__msndtxt { font-size: 0.72rem; }
+  .bfp__mtop { top: 6px; right: 6px; gap: 10px; }
+  .bfp__mbot { left: 5px; bottom: 8px; gap: 8px; }
+}
+
+/* Wide screens: the video fills the first screen under the headline, up to 960px. */
+@media (min-width: 860px) {
+  .hero--vsl .site-head { padding-top: 16px; }
+  .hero--vsl .site-head img { height: 52px; }
+  .hero--vsl h1.display { font-size: clamp(2.2rem, 1.4rem + 2.2vw, 3.1rem); }
+  .hero--vsl h1.display.hero__h1 { font-size: clamp(1.9rem, 1.1rem + 1.6vw, 2.15rem); max-width: 1060px; }
+  .hero--vsl .hero__sub { font-size: 1.08rem; line-height: 1.5; margin-top: 16px; }
+  .hero--vsl .vsl { max-width: max(560px, min(960px, calc((100dvh - var(--vsl-off)) * 16 / 9))); margin-top: 28px; }
+  .hero--vsl.hero--step .vsl { margin-top: 48px; }
+  .hero--vsl .cta-row { margin-top: 26px; }
+  .hero--vsl .hero__price { margin-top: 24px; }
+  .hero--vsl .tickets { margin-top: 36px; }
+  .hero--vsl .frame { margin-top: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bfp__soundtile::after { animation: none; }
+  .bfp__sound, .bfp__soundcard, .bfp__soundtile, .bfp__mini, .bfp__mbtn, .bfp__msnd { transition: none; }
+  .bfp[data-fx] { animation: none !important; }
+  .bfp__sound:hover .bfp__soundtile { transform: none; }
 }
