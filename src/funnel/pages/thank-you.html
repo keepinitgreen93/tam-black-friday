@@ -2,7 +2,7 @@
 
 <main id="main">
 
-<header class="hero hero--step">
+<header class="hero hero--step hero--vsl">
   <div class="wrap">
     <div class="site-head"><img src="/static/img/tam-logo-white.png" alt="Truly Authentic Marketing" width="430" height="220"></div>
     <ol class="progress" aria-label="Where you are">
@@ -16,20 +16,10 @@
       </h1>
       <p>Your seat is saved for Tuesday, December 8 to Thursday, December 10, 12:00 to 1:30 PM Eastern. Check your email for your receipt and your Product Champ login.</p>
     </div>
-    <figure class="frame">
-      <img src="/static/img/chris-lunch-zoom-host-800.webp" srcset="/static/img/chris-lunch-zoom-host-800.webp 800w, /static/img/chris-lunch-zoom-host-1400.webp 1400w" sizes="(min-width: 960px) 900px, 94vw" alt="Chris Iglesia at his desk with a laptop and a lunch bowl, welcoming you to the live session" width="1400" height="933" fetchpriority="high">
-      <figcaption class="frame__cap">See you at lunch on Tuesday, December 8. Three quick steps below.</figcaption>
-    </figure>
-  </div>
-</header>
-
-<!-- Video section: its own full-width block right after the hero. Hidden until the file exists in the video bucket (initVsl in src/funnel/funnel.ts). -->
-<section class="band band--d3 vsec" data-vsec hidden>
-  <div class="wrap vsec__in">
-    <p class="hero__flag">Watch this first</p>
-    <div class="vsl" data-vsl hidden>
+    <!-- Video: top of the hero, right under the headline. Autoplays muted behind a "Click to watch with sound" overlay, then floats as a mini player while it plays (player.ts). -->
+    <div class="vsl" data-vsl>
       <template>
-        <video playsinline preload="metadata" poster="/v/bf-welcome-next-steps_poster.jpg" src="/v/bf-welcome-next-steps_web.mp4" width="1280" height="720" aria-label="Watch: welcome, and your next steps">
+        <video muted playsinline autoplay preload="auto" poster="/v/bf-welcome-next-steps_poster.jpg" src="/v/bf-welcome-next-steps_web.mp4" width="1280" height="720" aria-label="Watch: welcome, and your next steps">
           <track kind="captions" src="/v/bf-welcome-next-steps_captions.vtt" srclang="en" label="English">
         </video>
       </template>
@@ -37,8 +27,12 @@
     <div class="cta-row">
       <a class="btn" href="#booker">Book your AI Growth Foundation call</a>
     </div>
+    <figure class="frame">
+      <img src="/static/img/chris-lunch-zoom-host-800.webp" srcset="/static/img/chris-lunch-zoom-host-800.webp 800w, /static/img/chris-lunch-zoom-host-1400.webp 1400w" sizes="(min-width: 960px) 900px, 94vw" alt="Chris Iglesia at his desk with a laptop and a lunch bowl, welcoming you to the live session" width="1400" height="933" fetchpriority="high">
+      <figcaption class="frame__cap">See you at lunch on Tuesday, December 8. Three quick steps below.</figcaption>
+    </figure>
   </div>
-</section>
+</header>
 
 <section class="band band--light">
   <div class="wrap read">

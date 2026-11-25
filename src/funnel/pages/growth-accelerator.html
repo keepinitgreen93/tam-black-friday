@@ -4,7 +4,7 @@
 
 <main id="main">
 
-<header class="hero hero--step">
+<header class="hero hero--step hero--vsl">
   <div class="wrap">
     <div class="site-head"><img src="/static/img/tam-logo-white.png" alt="Truly Authentic Marketing" width="430" height="220"></div>
     <ol class="progress" aria-label="Where you are">
@@ -17,6 +17,17 @@
       <span class="b">Walk into 2027 as the business people find and recommend when they need what you do</span>
     </h1>
     <p class="hero__sub">The guided path for owners who want to implement AI themselves.</p>
+    <!-- Video: top of the hero, right under the headline. Autoplays muted behind a "Click to watch with sound" overlay, then floats as a mini player while it plays (player.ts). -->
+    <div class="vsl" data-vsl>
+      <template>
+        <video muted playsinline autoplay preload="auto" poster="/v/growth-accel-2027_poster.jpg" src="/v/growth-accel-2027_web.mp4" width="1280" height="720" aria-label="Watch: the 2027 Growth Accelerator">
+          <track kind="captions" src="/v/growth-accel-2027_captions.vtt" srclang="en" label="English">
+        </video>
+      </template>
+    </div>
+    <div class="cta-row">
+      <a class="btn" href="#upsell-mount">Yes, Add the 2027 Growth Accelerator for $997</a>
+    </div>
     <p class="hero__price"><em>$997</em> this Black Friday week. Regular price $1,497.</p>
     <div class="cta-row" id="upsell-mount"></div>
     <figure class="frame">
@@ -25,23 +36,6 @@
     </figure>
   </div>
 </header>
-
-<!-- Video section: its own full-width block right after the hero. Hidden until the file exists in the video bucket (initVsl in src/funnel/funnel.ts). -->
-<section class="band band--d3 vsec" data-vsec hidden>
-  <div class="wrap vsec__in">
-    <p class="hero__flag">Watch this first</p>
-    <div class="vsl" data-vsl hidden>
-      <template>
-        <video playsinline preload="metadata" poster="/v/growth-accel-2027_poster.jpg" src="/v/growth-accel-2027_web.mp4" width="1280" height="720" aria-label="Watch: the 2027 Growth Accelerator">
-          <track kind="captions" src="/v/growth-accel-2027_captions.vtt" srclang="en" label="English">
-        </video>
-      </template>
-    </div>
-    <div class="cta-row">
-      <a class="btn" href="#upsell-mount">Yes, Add the 2027 Growth Accelerator for $997</a>
-    </div>
-  </div>
-</section>
 
 <!-- 1 -->
 <section class="band band--light">

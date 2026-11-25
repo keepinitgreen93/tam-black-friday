@@ -47,13 +47,15 @@ async function probeVideoFile(src: string): Promise<"yes" | "no" | "unknown"> {
   }
 }
 
-/* Video sections: <section data-vsec hidden> holds an eyebrow, a <div data-vsl hidden> slot with
-   <template><video ...></template>, and the button under the player.
+/* Video slots: <div class="vsl" data-vsl> sits inside the hero, right under the headline, with
+   <template><video ...></template> holding the source (muted, playsinline, autoplay). The button
+   under it lives in the hero, outside the slot, so it stays when the slot goes away.
    The markup names each file as /v/<file>; media.ts maps those to the public Product Champ
    Media Library URLs (video and poster) and the caption track to the Cloudflare function.
    The files are known to exist, so there is no pre-check: the shared branded player (player.ts)
-   takes over the slot and the section is shown right away. A load error shows the player's error
-   panel with a retry button; only a confirmed 404 hides the section (probeVideoFile). */
+   takes over the slot right away (the empty 16:9 box is already in the page, so nothing shifts).
+   A load error shows the player's error panel with a retry button; only a confirmed 404 hides the
+   slot (probeVideoFile). */
 function initVsl(root: HTMLElement) {
   root.querySelectorAll<HTMLElement>("[data-vsl]").forEach((slot) => {
     const tpl = slot.querySelector("template");
@@ -65,16 +67,13 @@ function initVsl(root: HTMLElement) {
         if (v) el.setAttribute(a, videoUrl(v));
       }
     }
-    const section = slot.closest<HTMLElement>("[data-vsec]");
     const hide = () => {
       slot.hidden = true;
-      if (section) section.hidden = true;
       slot.replaceChildren(tpl);
     };
     const video = source.cloneNode(true) as HTMLVideoElement;
     mountPlayer(slot, video, { onMissing: hide, probe: probeVideoFile });
     slot.hidden = false;
-    if (section) section.hidden = false;
   });
 }
 

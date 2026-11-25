@@ -3,7 +3,14 @@
    and use the page's own tokens (--coral, --night, --on-dark, --font-ui, --r-btn).
 
    Rules this file keeps:
-   - Nothing autoplays. The first play comes from a click or tap and plays WITH sound.
+   - VSL pattern: the video autoplays MUTED (muted + playsinline) behind a big "Click to watch with
+     sound" overlay. A click unmutes and restarts from 0:00. If the browser blocks autoplay, or the
+     visitor prefers reduced motion, nothing autoplays: the poster and play button show and the first
+     click plays WITH sound.
+   - Sticky mini player: when the main player scrolls out of view while the video is playing, the
+     SAME element is docked into a floating mini player (position: fixed, CSS only). It is never
+     moved in the DOM, so playback never restarts or pauses. The .vsl slot stays as a same-size
+     placeholder, so nothing shifts. Close pauses and hides the mini until the visitor scrolls back.
    - Captions are burned into the video files, so the caption <track> is kept for assistive
      tech but forced off. There is no CC button, so captions never show twice.
    - The player is never hidden because of a playback problem. A problem shows an error
@@ -35,6 +42,8 @@ const ICONS: Record<string, string> = {
   exit: '<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>',
   replay: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
   spinner: '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>',
+  expand: '<path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/>',
+  close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
 };
 
 function icon(name: keyof typeof ICONS, cls = ""): string {
@@ -57,6 +66,7 @@ function fmtLength(d: number): string {
 
 const SEEK_STEP = 5;
 const HIDE_AFTER_MS = 1500;
+const MINI_HIDE_AFTER_MS = 3200; // the mini player keeps its buttons a little longer
 const SPEEDS = [1, 1.25, 1.5];
 
 function el<K extends keyof HTMLElementTagNameMap>(
@@ -86,7 +96,13 @@ export function mountPlayer(
   video.removeAttribute("height");
   video.setAttribute("playsinline", "");
   video.setAttribute("webkit-playsinline", "");
-  video.setAttribute("preload", "metadata");
+  const reduceMotion =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const wantsAutoplay = !reduceMotion;
+  // Reduced motion: nothing may start by itself (the markup carries autoplay for everyone else).
+  if (!wantsAutoplay) video.removeAttribute("autoplay");
+  video.setAttribute("preload", wantsAutoplay ? "auto" : "metadata");
   video.setAttribute("disablepictureinpicture", "");
   video.setAttribute("controlslist", "nodownload noplaybackrate nofullscreen");
   video.classList.add("bfp__video");
@@ -120,6 +136,25 @@ export function mountPlayer(
   big.innerHTML = `<span class="bfp__playbtn">${icon("play", "bfp__ic--big")}</span><span class="bfp__label" data-label>Watch the video</span>`;
   surface.append(scrim, big);
 
+  // "Click to watch with sound": covers the whole picture while the video plays muted on its own.
+  const sound = el("button", "bfp__sound");
+  sound.type = "button";
+  sound.setAttribute("aria-label", `${title}. Click to watch with sound`);
+  sound.innerHTML = `<span class="bfp__soundcard"><span class="bfp__soundtile">${icon("muted", "bfp__ic--snd")}</span><span class="bfp__soundtxt">Click to watch with sound</span></span><span class="bfp__mprog" aria-hidden="true"><span data-mprog></span></span>`;
+
+  // Controls of the floating mini player (only shown while docked).
+  const mini = el("div", "bfp__mini");
+  mini.innerHTML = `
+    <div class="bfp__mtop">
+      <button type="button" class="bfp__mbtn" data-mini="expand" aria-label="Back to the full video">${icon("expand")}</button>
+      <button type="button" class="bfp__mbtn" data-mini="close" aria-label="Close the mini player">${icon("close")}</button>
+    </div>
+    <div class="bfp__mbot">
+      <button type="button" class="bfp__mbtn" data-mini="play" aria-label="Pause">${icon("pause", "bfp__ic--solid")}</button>
+      <button type="button" class="bfp__msnd" data-mini="sound" aria-label="Turn the sound on">${icon("muted")}<span class="bfp__msndtxt">Tap for sound</span></button>
+    </div>
+    <div class="bfp__mline" aria-hidden="true"><span data-mfill></span></div>`;
+
   const spinner = el("div", "bfp__spinner", icon("spinner", "bfp__spin"));
   spinner.setAttribute("aria-hidden", "true");
 
@@ -145,7 +180,7 @@ export function mountPlayer(
     <button type="button" class="bfp__btn bfp__btn--speed" data-act="speed" aria-label="Playback speed 1x. Change speed">1x</button>
     <button type="button" class="bfp__btn" data-act="fs" aria-label="Full screen">${icon("enter")}</button>`;
 
-  root.append(video, surface, spinner, note, errorBox, bar);
+  root.append(video, surface, sound, spinner, note, errorBox, bar, mini);
   slot.replaceChildren(root);
 
   const q = <T extends HTMLElement>(sel: string) => root.querySelector(sel) as T;
@@ -164,6 +199,12 @@ export function mountPlayer(
   const labelEl = q<HTMLElement>("[data-label]");
   const errTxt = q<HTMLElement>("[data-errtxt]");
   const retryBtn = q<HTMLButtonElement>("[data-retry]");
+  const mprog = q<HTMLElement>("[data-mprog]");
+  const mfill = q<HTMLElement>("[data-mfill]");
+  const miniPlay = q<HTMLButtonElement>('[data-mini="play"]');
+  const miniSound = q<HTMLButtonElement>('[data-mini="sound"]');
+  const miniExpand = q<HTMLButtonElement>('[data-mini="expand"]');
+  const miniClose = q<HTMLButtonElement>('[data-mini="close"]');
 
   /* ---------- State ---------- */
   let state: PlayerState = "idle";
@@ -183,6 +224,11 @@ export function mountPlayer(
   let lastTime = 0;
   let raf = 0;
   let resumeAt = 0;
+  let soundGate = false; // playing muted behind the "Click to watch with sound" overlay
+  type Dock = "main" | "mini" | "closed";
+  let dock: Dock = "main";
+  let ratio = 1; // how much of the main slot is on screen
+  let fxTimer = 0;
 
   const setState = (s: PlayerState) => {
     state = s;
@@ -190,6 +236,8 @@ export function mountPlayer(
     const playing = s === "playing";
     playBtn.innerHTML = icon(playing ? "pause" : s === "ended" ? "replay" : "play");
     playBtn.setAttribute("aria-label", playing ? "Pause" : s === "ended" ? "Replay" : "Play");
+    miniPlay.innerHTML = icon(playing ? "pause" : s === "ended" ? "replay" : "play");
+    miniPlay.setAttribute("aria-label", playing ? "Pause" : s === "ended" ? "Replay" : "Play");
     const bigFace = big.querySelector(".bfp__playbtn");
     if (bigFace) bigFace.innerHTML = icon(s === "ended" ? "replay" : "play", "bfp__ic--big");
     big.setAttribute(
@@ -236,7 +284,11 @@ export function mountPlayer(
   function showControls() {
     root.dataset["controls"] = "show";
     window.clearTimeout(hideTimer);
-    if (state === "playing") hideTimer = window.setTimeout(hideControls, HIDE_AFTER_MS);
+    if (state === "playing")
+      hideTimer = window.setTimeout(
+        hideControls,
+        dock === "main" ? HIDE_AFTER_MS : MINI_HIDE_AFTER_MS,
+      );
   }
 
   /* ---------- Paint ---------- */
@@ -246,6 +298,8 @@ export function mountPlayer(
     const pct = d > 0 ? Math.min(100, (t / d) * 100) : 0;
     fill.style.width = `${pct}%`;
     thumb.style.left = `${pct}%`;
+    mprog.style.width = `${pct}%`;
+    mfill.style.width = `${pct}%`;
     curEl.textContent = fmtTime(t);
     seek.setAttribute("aria-valuenow", String(Math.floor(t)));
     seek.setAttribute("aria-valuetext", `${fmtTime(t)} of ${fmtTime(d)}`);
@@ -276,6 +330,7 @@ export function mountPlayer(
 
   /* ---------- Actions ---------- */
   const fail = (msg: string) => {
+    setGate(false);
     setState("error");
     video.pause();
     note.dataset["on"] = "0";
@@ -303,12 +358,49 @@ export function mountPlayer(
     }
   };
 
+  const setGate = (on: boolean) => {
+    soundGate = on;
+    root.dataset["snd"] = on ? "off" : "on";
+  };
+
+  /* The overlay click (or the first tap on a blocked poster): sound on, from 0:00. */
   const startWithSound = () => {
     started = true;
+    setGate(false);
     video.muted = false;
     if (video.volume === 0) video.volume = 1;
-    if (state === "ended") video.currentTime = 0;
+    if (video.currentTime > 0.05) video.currentTime = 0;
     void requestPlay();
+  };
+
+  /* Sound on without a restart (mini player, keyboard, volume): the picture keeps its place. */
+  const unmuteInPlace = () => {
+    started = true;
+    setGate(false);
+    video.muted = false;
+    if (video.volume === 0) video.volume = 1;
+  };
+
+  /* Autoplay, muted. A browser that refuses falls back to the poster with the play button. */
+  const autoStart = async () => {
+    setGate(true);
+    root.dataset["auto"] = "1";
+    video.muted = true;
+    pending = true;
+    paintBusy();
+    try {
+      await video.play();
+    } catch (err) {
+      const name = (err as { name?: string } | null)?.name;
+      if (name === "AbortError") return; // a reload interrupted it; the next attempt follows
+      pending = false;
+      setGate(false);
+      root.dataset["auto"] = "0";
+      video.muted = false;
+      paintBusy();
+      if (name !== "NotAllowedError")
+        fail("This video could not start. Check your connection and try again.");
+    }
   };
 
   const toggle = () => {
@@ -326,6 +418,10 @@ export function mountPlayer(
   };
 
   const toggleMute = () => {
+    if (soundGate) {
+      unmuteInPlace();
+      return;
+    }
     video.muted = !video.muted;
     if (!video.muted && video.volume === 0) video.volume = 1;
   };
@@ -408,6 +504,7 @@ export function mountPlayer(
     if (!raf) paintTime();
   });
   video.addEventListener("play", () => {
+    root.dataset["auto"] = "0";
     setState("playing");
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(loop);
@@ -426,6 +523,7 @@ export function mountPlayer(
     paintTime();
   });
   video.addEventListener("ended", () => {
+    setGate(false);
     setState("ended");
     pending = false;
     waiting = false;
@@ -451,6 +549,12 @@ export function mountPlayer(
     vol.value = String(video.muted ? 0 : video.volume);
     vol.style.setProperty("--v", `${Number(vol.value) * 100}%`);
     if (!muted) note.dataset["on"] = "0";
+    root.dataset["muted"] = muted ? "1" : "0";
+    miniSound.setAttribute("aria-label", muted ? "Turn the sound on" : "Mute");
+    miniSound.innerHTML = muted
+      ? `${icon("muted")}<span class="bfp__msndtxt">Tap for sound</span>`
+      : icon("volume");
+    if (!video.muted && soundGate) setGate(false);
   });
   video.addEventListener("ratechange", () => {
     const label = `${video.playbackRate}x`;
@@ -476,7 +580,7 @@ export function mountPlayer(
       window.clearInterval(watch);
       return;
     }
-    if (state !== "playing" || video.paused || video.seeking || scrubbing) {
+    if (state !== "playing" || video.paused || video.seeking || scrubbing || document.hidden) {
       stuckTicks = 0;
       bufferTicks = 0;
       lastTime = video.currentTime;
@@ -525,6 +629,12 @@ export function mountPlayer(
   surface.addEventListener("click", () => {
     const controlsWereHidden = hiddenAtPointerDown;
     root.focus({ preventScroll: true });
+    if (dock !== "main") {
+      // Mini player on a touch screen: the first tap brings the buttons back, the next one pauses.
+      if (state === "playing" && lastPointer === "touch" && controlsWereHidden) showControls();
+      else toggle();
+      return;
+    }
     if (state === "idle") {
       startWithSound();
       return;
@@ -626,6 +736,11 @@ export function mountPlayer(
     const onButton = target.tagName === "BUTTON";
     const onRange = target.tagName === "INPUT";
     switch (e.key) {
+      case "Escape":
+        if (dock !== "mini") return;
+        e.preventDefault();
+        closeMini();
+        return;
       case " ":
         if (onButton) return; // let the focused button do its own thing
         e.preventDefault();
@@ -662,7 +777,102 @@ export function mountPlayer(
     showControls();
   });
 
+  /* ---------- Sound overlay ---------- */
+  sound.addEventListener("click", () => {
+    root.focus({ preventScroll: true });
+    startWithSound();
+  });
+
+  /* ---------- Sticky mini player ----------
+     The slot (.vsl) is the placeholder: it keeps its 16:9 box in the page. When it is scrolled away
+     while the video plays, the player root switches to position: fixed (data-dock="mini"). Same
+     element, same <video>, no DOM move, so the clock never stops. */
+  const poster = video.getAttribute("poster");
+  if (poster) slot.style.setProperty("--vsl-poster", `url("${poster.replace(/"/g, "%22")}")`);
+
+  const flashFx = (name: string) => {
+    if (reduceMotion) return;
+    root.dataset["fx"] = name;
+    window.clearTimeout(fxTimer);
+    fxTimer = window.setTimeout(() => {
+      delete root.dataset["fx"];
+    }, 260);
+  };
+
+  const setDock = (next: Dock) => {
+    if (dock === next) return;
+    const prev = dock;
+    dock = next;
+    root.dataset["dock"] = next;
+    slot.dataset["docked"] = next === "main" ? "0" : "1";
+    document.documentElement.classList.toggle("vsl-mini", next === "mini");
+    if (next === "mini") flashFx("in");
+    else if (next === "main" && prev !== "main") flashFx("back");
+    showControls();
+  };
+
+  const closeMini = () => {
+    video.pause();
+    setDock("closed");
+  };
+
+  const expandMini = () => {
+    const r = slot.getBoundingClientRect();
+    let y = r.top + window.scrollY + r.height / 2 - window.innerHeight / 2;
+    if (r.top + window.scrollY < window.innerHeight * 0.9) y = 0; // it sits in the first screen: back to the top, headline and all
+    window.scrollTo({ top: Math.max(0, y), behavior: reduceMotion ? "auto" : "smooth" });
+    // If the page cannot scroll any closer, dock it right away.
+    window.setTimeout(() => {
+      if (dock === "mini" && ratio >= 0.25) setDock("main");
+    }, 900);
+  };
+
+  miniPlay.addEventListener("click", toggle);
+  miniSound.addEventListener("click", () => {
+    if (soundGate || video.muted) unmuteInPlace();
+    else video.muted = true;
+  });
+  miniExpand.addEventListener("click", expandMini);
+  miniClose.addEventListener("click", closeMini);
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        const e = entries[entries.length - 1];
+        if (!e) return;
+        ratio = e.isIntersecting ? e.intersectionRatio : 0;
+        if (dock === "main") {
+          // Out of view and playing (muted autoplay counts): float it. A paused video stays put.
+          if (
+            ratio < 0.08 &&
+            !video.paused &&
+            !video.ended &&
+            !inFullscreen() &&
+            state === "playing"
+          ) {
+            setDock("mini");
+          }
+        } else if (ratio >= 0.25) {
+          setDock("main"); // back at the top: dock it again; "closed" resets too
+        }
+      },
+      { threshold: [0, 0.04, 0.08, 0.15, 0.25, 0.4, 0.6, 1] },
+    );
+    io.observe(slot);
+    const stop = window.setInterval(() => {
+      if (!root.isConnected) {
+        io.disconnect();
+        document.documentElement.classList.remove("vsl-mini");
+        window.clearInterval(stop);
+      }
+    }, 2000);
+  }
+
   /* ---------- Initial paint ---------- */
+  root.dataset["dock"] = "main";
+  root.dataset["snd"] = "on";
+  root.dataset["auto"] = "0";
+  slot.dataset["docked"] = "0";
   video.dispatchEvent(new Event("volumechange"));
   video.dispatchEvent(new Event("ratechange"));
   paintFullscreen();
@@ -670,4 +880,5 @@ export function mountPlayer(
   setState("idle");
   paintBusy();
   if (video.readyState === 0) video.load(); // a player copied out of a <template> may not start loading by itself
+  if (wantsAutoplay) void autoStart();
 }

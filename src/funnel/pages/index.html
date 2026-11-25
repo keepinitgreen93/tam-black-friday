@@ -3,17 +3,25 @@
 <main id="main">
 
 <!-- 1. Hero -->
-<header class="hero">
+<header class="hero hero--vsl">
   <div class="wrap">
     <div class="site-head"><img src="/static/img/tam-logo-white.png" alt="Truly Authentic Marketing" width="430" height="220"></div>
     <p class="hero__flag">Black Friday 2026. Hire Your AI Agent in 3 Days, Live.</p>
     <h1 class="display hero__h1">How I Help Local Service Businesses Land More Clients Through the Holidays and the 2027 Slowdown, Without Learning Tech, Copying and Pasting Prompts, or Hiring Another Person</h1>
     <p class="hero__sub">3 live sessions, December 8 to 10. You leave with an AI assistant trained on your business, workflows that run while you're with your family, and a client quiz that turns visitors into booked leads. $97 for you and a teammate. Black Friday price ends Sunday, December 6.</p>
-    <p class="hero__price">Black Friday price: <em>$97</em> one time. Ends Sunday, December&nbsp;6 at 11:59&nbsp;PM&nbsp;ET.</p>
+    <!-- Video: top of the hero, right under the headline. Autoplays muted behind a "Click to watch with sound" overlay, then floats as a mini player while it plays (player.ts). -->
+    <div class="vsl" data-vsl>
+      <template>
+        <video muted playsinline autoplay preload="auto" poster="/v/bf-vsl_poster.jpg" src="/v/bf-vsl_web.mp4" width="1280" height="720" aria-label="Watch: how the 3 live days work">
+          <track kind="captions" src="/v/bf-vsl_captions.vtt" srclang="en" label="English">
+        </video>
+      </template>
+    </div>
     <div class="cta-row">
       <a class="btn" href="/checkout">Hire My AI Agent for $97</a>
       <a class="no-link" href="#days">See how the 3 days work</a>
     </div>
+    <p class="hero__price">Black Friday price: <em>$97</em> one time. Ends Sunday, December&nbsp;6 at 11:59&nbsp;PM&nbsp;ET.</p>
 
     <ul class="tickets" aria-label="The three live sessions">
       <li class="ticket">
@@ -37,24 +45,6 @@
     </figure>
   </div>
 </header>
-
-<!-- Video section: its own full-width block right after the hero. Hidden until the file exists in the video bucket (initVsl in src/funnel/funnel.ts). -->
-<section class="band band--d3 vsec" data-vsec hidden>
-  <div class="wrap vsec__in">
-    <p class="hero__flag">Watch this first</p>
-    <div class="vsl" data-vsl hidden>
-      <template>
-        <video playsinline preload="metadata" poster="/v/bf-vsl_poster.jpg" src="/v/bf-vsl_web.mp4" width="1280" height="720" aria-label="Watch: how the 3 live days work">
-          <track kind="captions" src="/v/bf-vsl_captions.vtt" srclang="en" label="English">
-        </video>
-      </template>
-    </div>
-    <div class="cta-row">
-      <a class="btn" href="/checkout">Hire My AI Agent for $97</a>
-      <a class="no-link" href="#days">See how the 3 days work</a>
-    </div>
-  </div>
-</section>
 
 <!-- 2. The problem, six callouts -->
 <section class="band band--d1" id="reasons">
