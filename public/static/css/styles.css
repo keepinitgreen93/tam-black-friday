@@ -633,8 +633,6 @@ main p, main li { text-wrap: pretty; }
 /* ---------- Video slots (data-vsl). Hidden until the file exists in R2; see initVsl in src/funnel/funnel.ts ---------- */
 .vsl { position: relative; width: 100%; max-width: 760px; margin: 26px auto 0; aspect-ratio: 16 / 9; border-radius: var(--r-card); overflow: hidden; border: 1px solid rgba(227, 231, 244, 0.3); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45); background: var(--midnight); }
 .vsl[hidden] { display: none; }
-.vsl video { display: block; width: 100%; height: 100%; object-fit: cover; background: var(--midnight); }
-.vsl video:focus-visible { outline: 3px solid var(--focus, #FFFFFF); outline-offset: -3px; }
 .vsl--light { margin: 0 auto 26px; border-color: var(--line); box-shadow: 0 12px 26px rgba(23, 21, 59, 0.18); }
 @media (min-width: 960px) {
   /* Sales hero: the video sits next to the order button so the button stays above the fold. */
@@ -642,3 +640,116 @@ main p, main li { text-wrap: pretty; }
   .hero__act.has-vsl .vsl { max-width: none; margin: 0; }
   .hero__act.has-vsl .cta-row { margin-top: 0; }
 }
+
+/* ---------- Branded video player (.bfp). Built by src/funnel/player.ts, one component for every video slot.
+   Same tokens as the page: coral action colour on night, Manrope 800 UI type, 6px controls, flat fills, no glows.
+   The caption track is off by design: captions are burned into the video files. ---------- */
+.bfp { --bfp-focus: #FFFFFF; position: absolute; inset: 0; container: bfp / inline-size; background: var(--midnight); color: var(--on-dark); font-family: var(--font-ui); overflow: hidden; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; outline: none; }
+.bfp:focus-visible { outline: 3px solid var(--bfp-focus); outline-offset: -3px; border-radius: 0; }
+.bfp__video { display: block; width: 100%; height: 100%; object-fit: contain; background: var(--midnight); }
+.bfp[data-state="playing"][data-controls="hide"][data-cursor="1"] { cursor: none; }
+
+/* The surface takes the click anywhere. Poster state is the poster plus one big coral play button. */
+.bfp__surface { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.bfp__scrim { position: absolute; inset: 0; background: rgba(6, 9, 20, 0.34); opacity: 0; transition: opacity 180ms ease; pointer-events: none; }
+.bfp[data-state="idle"] .bfp__scrim, .bfp[data-state="ended"] .bfp__scrim { opacity: 1; }
+.bfp[data-state="paused"] .bfp__scrim { opacity: 1; background: rgba(6, 9, 20, 0.28); }
+.bfp__big { position: static; display: flex; flex-direction: column; align-items: center; gap: 16px; margin: 0; padding: 12px; background: none; border: 0; color: var(--white); font: inherit; cursor: pointer; }
+.bfp[data-state="playing"] .bfp__big, .bfp[data-state="paused"] .bfp__big, .bfp[data-state="error"] .bfp__big { display: none; }
+.bfp[data-state="error"] .bfp__surface { display: none; }
+.bfp__playbtn { position: relative; display: grid; place-items: center; width: 92px; height: 92px; border-radius: var(--r-btn); background: var(--coral); color: var(--night); transition: background-color 160ms ease, transform 140ms ease; }
+.bfp__big:hover .bfp__playbtn { background: #FF8E7C; transform: translateY(-1px); }
+.bfp__big:active .bfp__playbtn { transform: translateY(1px); }
+.bfp__big:focus-visible { outline: 3px solid var(--bfp-focus); outline-offset: 2px; border-radius: var(--r-btn); }
+.bfp__ic { width: 24px; height: 24px; flex: none; }
+.bfp__ic--solid { fill: currentColor; }
+.bfp__ic--big { width: 40px; height: 40px; fill: currentColor; margin-left: 4px; }
+.bfp[data-state="ended"] .bfp__ic--big { fill: none; margin-left: 0; }
+/* One calm ring that grows off the button and fades. Not a glow. */
+.bfp__playbtn::after { content: ""; position: absolute; inset: 0; border: 3px solid var(--coral); border-radius: var(--r-btn); opacity: 0; pointer-events: none; }
+.bfp[data-state="idle"] .bfp__playbtn::after { animation: bfp-ring 2.4s ease-out infinite; }
+@keyframes bfp-ring { 0% { opacity: 0.7; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(1.42); } }
+.bfp__label { position: absolute; left: 14px; bottom: 14px; padding: 9px 14px 7px; border-bottom: 2px solid var(--coral); border-radius: var(--r-card) var(--r-card) 0 0; background: rgba(6, 9, 20, 0.82); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.3; color: var(--white); }
+.bfp__big[data-has-label="0"] .bfp__label { display: none; }
+
+/* Buffering */
+.bfp__spinner { position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; display: none; place-items: center; border-radius: var(--r-btn); background: rgba(6, 9, 20, 0.78); color: var(--coral); pointer-events: none; }
+.bfp[data-busy="1"] .bfp__spinner { display: grid; }
+.bfp__spin { width: 30px; height: 30px; stroke-width: 2.6; animation: bfp-spin 0.8s linear infinite; }
+@keyframes bfp-spin { to { transform: rotate(360deg); } }
+
+/* Sound notice */
+.bfp__note { position: absolute; left: 12px; right: 12px; bottom: 12px; margin: 0; padding: 10px 14px; border-left: 4px solid var(--coral); border-radius: var(--r-card); background: rgba(6, 9, 20, 0.92); color: var(--white); font-size: 0.86rem; font-weight: 700; line-height: 1.4; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity 180ms ease, transform 180ms ease; }
+.bfp__note[data-on="1"] { opacity: 1; transform: none; }
+.bfp[data-controls="show"][data-state="playing"] .bfp__note, .bfp[data-state="paused"] .bfp__note { bottom: 60px; }
+
+/* Error panel */
+.bfp__error { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; text-align: center; background: rgba(6, 9, 20, 0.94); }
+.bfp[data-state="error"] .bfp__error { display: flex; }
+.bfp__errtxt { margin: 0; max-width: 30em; font-weight: 700; font-size: 1.02rem; line-height: 1.45; color: var(--white); text-wrap: balance; }
+.bfp__retry { min-height: 52px; padding: 12px 28px; border: 0; border-radius: var(--r-btn); background: var(--coral); color: var(--night); font: 800 1.05rem/1.2 var(--font-ui); letter-spacing: -0.01em; cursor: pointer; transition: background-color 160ms ease, transform 140ms ease; }
+.bfp__retry:hover { background: #FF8E7C; transform: translateY(-1px); }
+.bfp__retry:active { transform: translateY(1px); }
+.bfp__retry:focus-visible { outline: 3px solid var(--bfp-focus); outline-offset: 3px; }
+
+/* Controls bar: flat night, coral progress. Two rows on narrow players (progress on top), one row from 460px. */
+.bfp__bar { position: absolute; left: 0; right: 0; bottom: 0; display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; padding: 8px 8px 0 4px; background: linear-gradient(to bottom, rgba(11, 16, 32, 0) 0%, rgba(11, 16, 32, 0.8) 36%, rgba(11, 16, 32, 0.97) 100%); transition: opacity 200ms ease, transform 200ms ease; }
+.bfp[data-state="idle"] .bfp__bar, .bfp[data-state="ended"] .bfp__bar, .bfp[data-state="error"] .bfp__bar { display: none; }
+.bfp[data-controls="hide"] .bfp__bar { opacity: 0; transform: translateY(100%); pointer-events: none; }
+.bfp__btn { flex: none; display: grid; place-items: center; min-width: 44px; height: 44px; padding: 0 8px; margin: 0; border: 0; border-radius: var(--r-btn); background: none; color: var(--on-dark); font: 800 0.92rem/1 var(--font-ui); letter-spacing: 0.01em; cursor: pointer; transition: background-color 140ms ease, color 140ms ease; }
+.bfp__btn:hover { background: rgba(227, 231, 244, 0.14); color: var(--white); }
+.bfp__btn:active { background: rgba(227, 231, 244, 0.22); }
+.bfp__btn:focus-visible, .bfp__seek:focus-visible, .bfp__range:focus-visible { outline: 3px solid var(--bfp-focus); outline-offset: -3px; }
+.bfp__btn--speed { min-width: 52px; }
+.bfp__time { flex: none; order: 2; margin: 0 6px 0 4px; font-weight: 800; font-size: 0.88rem; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; color: var(--on-dark); white-space: nowrap; }
+.bfp__sep { color: var(--on-dark-muted); }
+.bfp__bar > [data-act="play"] { order: 1; }
+.bfp__vol { order: 4; display: flex; align-items: center; margin-left: auto; }
+.bfp__bar > [data-act="speed"] { order: 5; }
+.bfp__bar > [data-act="fs"] { order: 6; }
+.bfp__range { display: none; }
+
+/* Seek: 40px tall hit area, 6px track. Played is coral, buffered is a lighter rail. */
+.bfp__seek { order: 3; flex: 1 1 auto; position: relative; height: 44px; min-width: 56px; margin: 0 8px; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+.bfp__track { position: relative; width: 100%; height: 6px; border-radius: 3px; background: rgba(227, 231, 244, 0.34); }
+.bfp__seek:hover .bfp__track, .bfp__seek[data-drag="1"] .bfp__track { height: 8px; }
+.bfp__buf, .bfp__fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 3px; width: 0; }
+.bfp__buf { background: rgba(227, 231, 244, 0.58); }
+.bfp__fill { background: var(--coral); }
+.bfp__thumb { position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--coral); border: 3px solid var(--night); transform: scale(0.7); transition: transform 120ms ease; pointer-events: none; }
+.bfp__seek:hover .bfp__thumb, .bfp__seek:focus-visible .bfp__thumb, .bfp__seek[data-drag="1"] .bfp__thumb { transform: scale(1); }
+.bfp__tip { position: absolute; bottom: 34px; left: 0; transform: translateX(-50%); padding: 4px 8px; border-radius: var(--r-card); background: var(--night); border: 1px solid var(--rule-dark); color: var(--white); font-size: 0.78rem; font-weight: 800; font-variant-numeric: tabular-nums; opacity: 0; pointer-events: none; }
+.bfp__seek:hover .bfp__tip, .bfp__seek[data-drag="1"] .bfp__tip { opacity: 1; }
+@media (hover: none) { .bfp__tip { display: none; } .bfp__thumb { transform: scale(1); } }
+
+/* Narrow players (phones): one compact row, about 48px, so the burned-in captions stay clear. */
+@container bfp (max-width: 459px) {
+  .bfp__bar { padding: 4px 6px 0 2px; gap: 0; }
+  .bfp__sep, [data-dur] { display: none; }
+  .bfp__time { margin: 0 2px 0 0; font-size: 0.82rem; }
+  .bfp__seek { margin: 0 6px; min-width: 40px; }
+  .bfp__btn { min-width: 44px; padding: 0 4px; }
+  .bfp__btn--speed { min-width: 44px; font-size: 0.8rem; }
+}
+@container bfp (min-width: 640px) {
+  .bfp__range { display: block; -webkit-appearance: none; appearance: none; width: 64px; height: 44px; margin: 0 8px 0 0; background: none; cursor: pointer; }
+  .bfp__range::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: linear-gradient(var(--on-dark-muted), var(--on-dark-muted)) 0 / var(--v, 100%) 100% no-repeat, var(--rule-dark); }
+  .bfp__range::-moz-range-track { height: 6px; border-radius: 3px; background: var(--rule-dark); }
+  .bfp__range::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--on-dark-muted); }
+  .bfp__range::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -4px; border-radius: 50%; background: var(--white); border: 3px solid var(--night); }
+  .bfp__range::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--white); border: 3px solid var(--night); }
+}
+/* Touch phones cannot set volume from a page, so the speaker is just mute/unmute there. */
+@media (hover: none) { .bfp__range { display: none !important; } }
+
+/* Fullscreen */
+.bfp:fullscreen { background: #000; }
+.bfp:fullscreen .bfp__time { font-size: 1rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bfp__playbtn::after { animation: none; }
+  .bfp__spin { animation: bfp-fade 1.4s ease-in-out infinite; }
+  .bfp__bar, .bfp__scrim, .bfp__note, .bfp__thumb, .bfp__playbtn, .bfp__retry, .bfp__btn { transition: none; }
+  .bfp__big:hover .bfp__playbtn, .bfp__retry:hover { transform: none; }
+}
+@keyframes bfp-fade { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }

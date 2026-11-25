@@ -2,6 +2,7 @@
    popups, order buttons, share link). Ported 1:1 from assets/js/funnel.js;
    runs once per page after the markup is in the document. */
 import { TAM_FUNNEL } from "./config";
+import { mountPlayer } from "./player";
 
 let lastFocus: Element | null = null;
 
@@ -30,23 +31,31 @@ export function closeModal(modal: HTMLElement) {
   if (lastFocus instanceof HTMLElement) lastFocus.focus();
 }
 
-/** Asks the /v/ function whether a file is in the video bucket. Always a 200, so a
-    missing file never shows up as a console error. Anything unexpected reads as "no". */
-async function videoFileExists(src: string): Promise<boolean> {
+/** Asks the /v/ function whether a file is in the video bucket. The answer is always a 200
+    JSON body, so a missing file never shows up as a console error. "no" means the bucket
+    said the file is not there. A failed or odd answer is "unknown": the player still shows,
+    because a flaky check must never take a working video away. */
+async function probeVideoFile(src: string): Promise<"yes" | "no" | "unknown"> {
   try {
-    const res = await fetch(src + (src.includes("?") ? "&" : "?") + "probe=1", { cache: "no-store" });
-    if (!res.ok || !(res.headers.get("content-type") ?? "").includes("application/json")) return false;
+    const res = await fetch(src + (src.includes("?") ? "&" : "?") + "probe=1", {
+      cache: "no-store",
+    });
+    if (!res.ok || !(res.headers.get("content-type") ?? "").includes("application/json"))
+      return "unknown";
     const data: unknown = await res.json();
-    return typeof data === "object" && data !== null && (data as { exists?: unknown }).exists === true;
+    const exists =
+      typeof data === "object" && data !== null ? (data as { exists?: unknown }).exists : undefined;
+    return exists === true ? "yes" : exists === false ? "no" : "unknown";
   } catch {
-    return false;
+    return "unknown";
   }
 }
 
 /* Video slots: <div data-vsl hidden><template><video ...></template></div>.
-   The player lives in a <template> so the browser requests nothing until the file is
-   confirmed in the bucket. No file, a failed check, or a playback error: the slot stays
-   (or goes back to) hidden, so a broken player is never shown. */
+   The video lives in a <template> so the browser requests nothing until the bucket confirms
+   the file. Then the shared branded player (player.ts) takes over the slot. The slot stays
+   hidden only when the file is confirmed missing. A playback problem shows an error panel
+   with a retry button inside the player; it never hides the player. */
 function initVsl(root: HTMLElement) {
   root.querySelectorAll<HTMLElement>("[data-vsl]").forEach((slot) => {
     const tpl = slot.querySelector("template");
@@ -57,19 +66,17 @@ function initVsl(root: HTMLElement) {
     const hide = () => {
       slot.hidden = true;
       row?.classList.remove("has-vsl");
-      slot.querySelector("video")?.remove();
+      slot.replaceChildren(tpl);
     };
     void (async () => {
-      if (!(await videoFileExists(src))) return;
+      if ((await probeVideoFile(src)) === "no") return;
       const video = source.cloneNode(true) as HTMLVideoElement;
       const poster = video.getAttribute("poster");
-      if (poster && !(await videoFileExists(poster))) video.removeAttribute("poster");
+      if (poster && (await probeVideoFile(poster)) === "no") video.removeAttribute("poster");
       const track = video.querySelector("track");
       const captions = track?.getAttribute("src");
-      if (track && captions && !(await videoFileExists(captions))) track.remove();
-      video.addEventListener("error", hide);
-      slot.appendChild(video);
-      video.load(); // a player copied out of a <template> does not always start loading by itself
+      if (track && captions && (await probeVideoFile(captions)) === "no") track.remove();
+      mountPlayer(slot, video, { onMissing: hide, probe: probeVideoFile });
       slot.hidden = false;
       row?.classList.add("has-vsl");
     })();
