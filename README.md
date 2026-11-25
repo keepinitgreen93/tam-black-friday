@@ -141,7 +141,7 @@ rules in `public/static/css/styles.css`.
 
 | Page | Video | Poster | Captions |
 |---|---|---|---|
-| `/` and `/install` | `bf-vsl_web.mp4` | `bf-vsl_poster.jpg` | `bf-vsl_captions.vtt` |
+| `/` and `/install` | `bf-vsl-flow-v2_web.mp4` (from R2 via `/v/`; not in `VIDEO_URLS`) | `bf-vsl-flow-v2_poster.jpg` | `bf-vsl-flow-v2_captions.vtt` |
 | `/growth-accelerator` | `growth-accel-2027_web.mp4` | `growth-accel-2027_poster.jpg` | `growth-accel-2027_captions.vtt` |
 | `/thank-you` | `bf-welcome-next-steps_web.mp4` | `bf-welcome-next-steps_poster.jpg` | `bf-welcome-next-steps_captions.vtt` |
 
