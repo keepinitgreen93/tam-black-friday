@@ -50,13 +50,13 @@ export function parseRange(header, size) {
   return { status: 206, start, end };
 }
 
-export async function onRequest({ request, env, params }) {
+async function handle({ request, env, params }) {
   const key = String(params.file || '');
   const probe = new URL(request.url).searchParams.get('probe') === '1';
   const valid = NAME.test(key);
 
   if (request.method !== 'GET' && request.method !== 'HEAD') {
-    return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
+    return new Response('Method not allowed', { status: 405, headers: { Allow: 'GET, HEAD, OPTIONS' } });
   }
   if (!valid || !env.VIDEO) return probe ? json({ exists: false }) : notFound();
 
@@ -100,4 +100,32 @@ export async function onRequest({ request, env, params }) {
   const obj = await env.VIDEO.get(key, r.status === 206 ? { range: { offset: r.start, length } } : undefined);
   if (!obj) return notFound();
   return new Response(obj.body, { status: r.status, headers });
+}
+
+// The files are public read-only media, and the funnel on other hosts (the AI Studio site) loads
+// them from this origin, so every answer carries CORS headers. Range and Content-Range stay exposed
+// so the player can seek.
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Expose-Headers': 'Content-Range, Content-Length, Accept-Ranges',
+  'Cross-Origin-Resource-Policy': 'cross-origin',
+};
+
+export async function onRequest(ctx) {
+  if (ctx.request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        ...CORS,
+        'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+        'Access-Control-Allow-Headers': 'Range, If-Range, If-None-Match, If-Modified-Since, Content-Type',
+        'Access-Control-Max-Age': '86400',
+        'Cache-Control': 'public, max-age=86400',
+      },
+    });
+  }
+  const res = await handle(ctx);
+  const headers = new Headers(res.headers);
+  for (const [k, v] of Object.entries(CORS)) headers.set(k, v);
+  return new Response(res.body, { status: res.status, statusText: res.statusText, headers });
 }
