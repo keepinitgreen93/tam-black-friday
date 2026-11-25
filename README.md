@@ -121,8 +121,13 @@ choose "Rollback to this deployment".
 
 ## Videos
 
-The sales page, the upsell and the thank-you page each have a video slot (`data-vsl`). A slot
-stays hidden until its video file exists, so a page never shows a broken player.
+The sales page, the upsell and the thank-you page each have a video slot (`data-vsl`). The page
+markup names each file as `/v/<file>`; `src/funnel/media.ts` (`VIDEO_URLS`) maps the three mp4 files
+and three posters to their public URLs in the Product Champ Media Library (folder "Black Friday 2026
+VSL", `files.leadconnectorhq.com`), so every host plays the same files. The media library rejects
+`.vtt`, so the caption tracks (burned into the video, kept for assistive tech) load from the
+Cloudflare function below, which sends CORS headers. The slot is hidden only if the file answers
+404; any other load error shows the player's error panel with a retry button.
 
 | Page | Video | Poster | Captions |
 |---|---|---|---|
@@ -130,7 +135,7 @@ stays hidden until its video file exists, so a page never shows a broken player.
 | `/growth-accelerator` | `growth-accel-2027_web.mp4` | `growth-accel-2027_poster.jpg` | `growth-accel-2027_captions.vtt` |
 | `/thank-you` | `bf-welcome-next-steps_web.mp4` | `bf-welcome-next-steps_poster.jpg` | `bf-welcome-next-steps_captions.vtt` |
 
-The files live in the private R2 bucket `tam-bf-2026-video`. It has no public URL. The Pages
+Fallback copy (and the VTT files): the private R2 bucket `tam-bf-2026-video`. It has no public URL. The Pages
 Function `pages-preview/functions/v/[file].js` serves them at `/v/<file>` through the `VIDEO`
 binding in `pages-preview/wrangler.jsonc`, with HTTP Range support so the player can seek.
 
