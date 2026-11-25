@@ -10,19 +10,9 @@
     <h1 class="display hero__h1">How I Help Local Service Businesses Land More Clients Through the Holidays and the 2027 Slowdown, Without Learning Tech, Copying and Pasting Prompts, or Hiring Another Person</h1>
     <p class="hero__sub">3 live sessions, December 8 to 10. You leave with an AI assistant trained on your business, workflows that run while you're with your family, and a client quiz that turns visitors into booked leads. $97 for you and a teammate. Black Friday price ends Sunday, December 6.</p>
     <p class="hero__price">Black Friday price: <em>$97</em> one time. Ends Sunday, December&nbsp;6 at 11:59&nbsp;PM&nbsp;ET.</p>
-    <!-- VSL slot. Stays hidden until /v/bf-vsl_web.mp4 exists (see initVsl in src/funnel/funnel.ts). -->
-    <div class="hero__act">
-    <div class="vsl" data-vsl hidden>
-      <template>
-        <video playsinline preload="metadata" poster="/v/bf-vsl_poster.jpg" src="/v/bf-vsl_web.mp4" width="1280" height="720" aria-label="Watch: how the 3 live days work">
-          <track kind="captions" src="/v/bf-vsl_captions.vtt" srclang="en" label="English">
-        </video>
-      </template>
-    </div>
     <div class="cta-row">
       <a class="btn" href="/checkout">Hire My AI Agent for $97</a>
       <a class="no-link" href="#days">See how the 3 days work</a>
-    </div>
     </div>
 
     <ul class="tickets" aria-label="The three live sessions">
@@ -47,6 +37,24 @@
     </figure>
   </div>
 </header>
+
+<!-- Video section: its own full-width block right after the hero. Hidden until the file exists in the video bucket (initVsl in src/funnel/funnel.ts). -->
+<section class="band band--d3 vsec" data-vsec hidden>
+  <div class="wrap vsec__in">
+    <p class="hero__flag">Watch this first</p>
+    <div class="vsl" data-vsl hidden>
+      <template>
+        <video playsinline preload="metadata" poster="/v/bf-vsl_poster.jpg" src="/v/bf-vsl_web.mp4" width="1280" height="720" aria-label="Watch: how the 3 live days work">
+          <track kind="captions" src="/v/bf-vsl_captions.vtt" srclang="en" label="English">
+        </video>
+      </template>
+    </div>
+    <div class="cta-row">
+      <a class="btn" href="/checkout">Hire My AI Agent for $97</a>
+      <a class="no-link" href="#days">See how the 3 days work</a>
+    </div>
+  </div>
+</section>
 
 <!-- 2. The problem, six callouts -->
 <section class="band band--d1" id="reasons">

@@ -23,17 +23,25 @@
   </div>
 </header>
 
-<section class="band band--light">
-  <div class="wrap read">
-
-    <!-- Welcome video slot. Stays hidden until /v/bf-welcome-next-steps_web.mp4 exists. -->
-    <div class="vsl vsl--light" data-vsl hidden>
+<!-- Video section: its own full-width block right after the hero. Hidden until the file exists in the video bucket (initVsl in src/funnel/funnel.ts). -->
+<section class="band band--d3 vsec" data-vsec hidden>
+  <div class="wrap vsec__in">
+    <p class="hero__flag">Watch this first</p>
+    <div class="vsl" data-vsl hidden>
       <template>
         <video playsinline preload="metadata" poster="/v/bf-welcome-next-steps_poster.jpg" src="/v/bf-welcome-next-steps_web.mp4" width="1280" height="720" aria-label="Watch: welcome, and your next steps">
           <track kind="captions" src="/v/bf-welcome-next-steps_captions.vtt" srclang="en" label="English">
         </video>
       </template>
     </div>
+    <div class="cta-row">
+      <a class="btn" href="#booker">Book your AI Growth Foundation call</a>
+    </div>
+  </div>
+</section>
+
+<section class="band band--light">
+  <div class="wrap read">
 
     <!-- STEP 1 -->
     <article class="step" id="step-book">
