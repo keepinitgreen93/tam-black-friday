@@ -142,8 +142,8 @@ rules in `public/static/css/styles.css`.
 | Page | Video | Poster | Captions |
 |---|---|---|---|
 | `/` and `/install` | `bf-vsl-flow-v2_web.mp4` (from R2 via `/v/`; not in `VIDEO_URLS`) | `bf-vsl-flow-v2_poster.jpg` | `bf-vsl-flow-v2_captions.vtt` |
-| `/growth-accelerator` | `growth-accel-2027_web.mp4` | `growth-accel-2027_poster.jpg` | `growth-accel-2027_captions.vtt` |
-| `/thank-you` | `bf-welcome-next-steps_web.mp4` | `bf-welcome-next-steps_poster.jpg` | `bf-welcome-next-steps_captions.vtt` |
+| `/growth-accelerator` | `ga27-flow_web.mp4` | `ga27-flow_poster.jpg` | `ga27-flow_captions.vtt` |
+| `/thank-you` | `bfwelcome-flow_web.mp4` | `bfwelcome-flow_poster.jpg` | `bfwelcome-flow_captions.vtt` |
 
 Fallback copy (and the VTT files): the private R2 bucket `tam-bf-2026-video`. It has no public URL. The Pages
 Function `pages-preview/functions/v/[file].js` serves them at `/v/<file>` through the `VIDEO`
