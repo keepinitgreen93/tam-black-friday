@@ -25,8 +25,9 @@ execSync("npm run build", {
   env: { ...process.env, VITE_BF_PREVIEW: "1", VIBE_SANDBOX: "" },
 });
 
-rmSync(out, { recursive: true, force: true });
+// Clear the folder's contents, not the folder itself: on Windows the folder can be held open (EBUSY).
 mkdirSync(out, { recursive: true });
+for (const name of readdirSync(out)) rmSync(join(out, name), { recursive: true, force: true });
 cpSync(join(root, "dist", "client"), out, { recursive: true });
 
 const server = (await import(pathToFileURL(join(root, "dist", "server", "server.js")).href)).default;
